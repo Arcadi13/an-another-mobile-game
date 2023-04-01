@@ -6,9 +6,9 @@ import 'src/game/game_page.dart';
 
 void main() {
   Bloc.observer = const GameObserver();
-  runApp(const GameApp());
+  runApp(GameApp());
 }
 
 class GameApp extends MaterialApp {
-  const GameApp({super.key}) : super(home: const GamePage());
+  GameApp({super.key}) : super(home: GamePage());
 }

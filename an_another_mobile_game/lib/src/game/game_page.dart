@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,12 +6,17 @@ import 'game.dart';
 import 'game_bloc.dart';
 
 class GamePage extends StatelessWidget {
-  const GamePage({super.key});
+  GamePage({super.key});
+
+  final Game game = Game();
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => GameBloc(Game()), child: const GameWidget());
+    return MultiBlocProvider(providers: [
+      BlocProvider<GameBloc>(create: (BuildContext context) => GameBloc(game)),
+      BlocProvider<GameEnhancementsBloc>(
+          create: (BuildContext context) => GameEnhancementsBloc(game)),
+    ], child: const GameWidget());
   }
 }
 
@@ -26,7 +32,7 @@ class GameWidget extends StatelessWidget {
             return Scaffold(
               body: Container(
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.blue,
                     image: DecorationImage(
                         image: AssetImage("assets/images/placeholder.jpg"),
@@ -48,16 +54,18 @@ class GameWidget extends StatelessWidget {
                       ),
                       onPressed: () =>
                           context.read<GameBloc>().add(GamePublished()),
-                      child: Text('Publish game'),
+                      child: const Text('Publish game'),
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blue,
                       ),
-                      onPressed: () =>
-                          context.read<GameBloc>().add(DeveloperHired()),
-                      child: Text('Hire developer'),
-                    )
+                      onPressed: () => context
+                          .read<GameEnhancementsBloc>()
+                          .add(GameEnhancementsOpenEvent()),
+                      child: const Text('Hire developer'),
+                    ),
+                    const GameEnhancementsWidget()
                   ],
                 ),
               ),
