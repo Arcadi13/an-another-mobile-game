@@ -45,15 +45,23 @@ class GameWidget extends StatelessWidget {
                       style: theme.textTheme.displayMedium,
                     ),
                     Text(
-                      '${state.lines} code lines',
+                      '${state.incomePerSecond} \$ x sec',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                    Text(
+                      '${state.lines} lines',
                       style: theme.textTheme.displayMedium,
+                    ),
+                    Text(
+                      '${state.linesPerSecond} lines x sec',
+                      style: theme.textTheme.bodySmall,
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blue,
                       ),
                       onPressed: () =>
-                          context.read<GameBloc>().add(GamePublished()),
+                          context.read<GameBloc>().add(GamePublished(GameSize.tiny)),
                       child: const Text('Publish game'),
                     ),
                     TextButton(
