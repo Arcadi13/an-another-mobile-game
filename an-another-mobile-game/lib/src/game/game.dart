@@ -23,7 +23,7 @@ class Game {
     incomingPerSecond++;
   }
 
-  void hireDeveloper(int developerLines){
+  void hireDeveloper(int developerLines) {
     linesPerSecond += developerLines;
   }
 }

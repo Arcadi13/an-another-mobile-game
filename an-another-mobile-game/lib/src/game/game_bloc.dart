@@ -14,10 +14,12 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     on<GameTicked>((event, emit) => emit(state.update(game)));
 
-    on<GameTapped>((event, emit) {
-      game.writeLine();
-      emit(state.update(game));
-    },);
+    on<GameTapped>(
+      (event, emit) {
+        game.writeLine();
+        emit(state.update(game));
+      },
+    );
 
     on<GamePublished>((event, emit) => game.publishGame());
 
@@ -33,7 +35,7 @@ class GameState {
   final int money;
   final int lines;
 
-  GameState update(Game game){
+  GameState update(Game game) {
     return GameState(game.money, game.lines);
   }
 }
