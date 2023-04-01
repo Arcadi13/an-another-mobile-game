@@ -46,8 +46,15 @@ class GameWidget extends StatelessWidget {
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.blue,
                       ),
-                      onPressed: () => {},
+                      onPressed: () => context.read<GameBloc>().add(GamePublished()),
                       child: Text('Publish game'),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.blue,
+                      ),
+                      onPressed: () => context.read<GameBloc>().add(DeveloperHired()),
+                      child: Text('Hire developer'),
                     )
                   ],
                 ),
