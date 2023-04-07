@@ -27,7 +27,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     });
 
     on<DeveloperHired>((event, emit) {
-      game.hireDeveloper(5);
+      game.hireDeveloper(event.developerType);
       emit(state.update(game));
     });
 
@@ -73,7 +73,11 @@ class GamePublished extends GameEvent {
   final GameSize size;
 }
 
-class DeveloperHired extends GameEvent {}
+class DeveloperHired extends GameEvent {
+  DeveloperHired(this.developerType);
+
+  final DeveloperType developerType;
+}
 
 class ToolBought extends GameEvent {}
 

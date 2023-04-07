@@ -30,54 +30,58 @@ class GameWidget extends StatelessWidget {
         child: BlocBuilder<GameBloc, GameState>(
           builder: (context, state) {
             return Scaffold(
-              body: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                    color: Colors.blue,
-                    image: DecorationImage(
-                        image: AssetImage("assets/images/placeholder.jpg"),
-                        fit: BoxFit.fitHeight)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${state.money} \$',
-                      style: theme.textTheme.displayMedium,
-                    ),
-                    Text(
-                      '${state.incomePerSecond} \$ x sec',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    Text(
-                      '${state.lines} lines',
-                      style: theme.textTheme.displayMedium,
-                    ),
-                    Text(
-                      '${state.linesPerSecond} lines x sec',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
+                body: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      image: DecorationImage(
+                          image: AssetImage("assets/images/placeholder.jpg"),
+                          fit: BoxFit.fitHeight)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '${state.money} \$',
+                        style: theme.textTheme.displayMedium,
                       ),
-                      onPressed: () =>
-                          context.read<GameBloc>().add(GamePublished(GameSize.tiny)),
-                      child: const Text('Publish game'),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.blue,
+                      Text(
+                        '${state.incomePerSecond} \$ x sec',
+                        style: theme.textTheme.bodySmall,
                       ),
-                      onPressed: () => context
-                          .read<GameEnhancementsBloc>()
-                          .add(GameEnhancementsOpenEvent()),
-                      child: const Text('Hire developer'),
-                    ),
-                    const GameEnhancementsWidget()
-                  ],
+                      Text(
+                        '${state.lines} lines',
+                        style: theme.textTheme.displayMedium,
+                      ),
+                      Text(
+                        '${state.linesPerSecond} lines x sec',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      const GameEnhancementsWidget()
+                    ],
+                  ),
                 ),
-              ),
-            );
+                floatingActionButton: Stack(
+                  children: [
+                    Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: FloatingActionButton(
+                          child: const Icon(Icons.add_chart),
+                          onPressed: () => context
+                              .read<GameEnhancementsBloc>()
+                              .add(GameEnhancementsOpenEvent()),
+                        )),
+                    Positioned(
+                        top: 20,
+                        right: 20,
+                        child: FloatingActionButton(
+                          child: const Icon(Icons.gamepad_outlined),
+                          onPressed: () => context
+                              .read<GameBloc>()
+                              .add(GamePublished(GameSize.tiny)),
+                        ))
+                  ],
+                ));
           },
         ),
         onTap: () => context.read<GameBloc>().add(GameTapped()));
