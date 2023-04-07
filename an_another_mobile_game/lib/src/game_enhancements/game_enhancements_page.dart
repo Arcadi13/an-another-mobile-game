@@ -36,27 +36,95 @@ class GameEnhancementsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<GameEnhancementsBloc, GameEnhancementsState>(
         builder: (context, state) {
-      return Dialog(
-          child: state is GameEnhancementsOpenState
-              ? Column(children: <Widget>[
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                    ),
-                    onPressed: () =>
-                        context.read<GameBloc>().add(DeveloperHired()),
-                    child: const Text('Hire developer'),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                    ),
-                    onPressed: () =>
-                        context.read<GameEnhancementsBloc>().add(GameEnhancementsCloseEvent()),
-                    child: const Text('Close'),
-                  ),
-                ])
-              : null);
+      return DefaultTabController(
+          length: 3,
+          child: Dialog(
+              child: state is GameEnhancementsOpenState
+                  ? Column(mainAxisSize: MainAxisSize.min, children: [
+                      const TabBar(tabs: [
+                        Tab(text: 'Developers'),
+                        Tab(text: 'Tools'),
+                        Tab(
+                          text: 'Office',
+                        )
+                      ]),
+                      SizedBox(
+                          height: 300,
+                          child: TabBarView(
+                            children: [
+                              Center(
+                                  child: Column(
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameBloc>()
+                                        .add(DeveloperHired()),
+                                    child: const Text('Hire developer'),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameEnhancementsBloc>()
+                                        .add(GameEnhancementsCloseEvent()),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              )),
+                              Center(
+                                  child: Column(
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameBloc>()
+                                        .add(ToolBought()),
+                                    child: const Text('Buy hardware'),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameEnhancementsBloc>()
+                                        .add(GameEnhancementsCloseEvent()),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              )),
+                              Center(
+                                  child: Column(
+                                children: [
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameBloc>()
+                                        .add(OfficeImprovement()),
+                                    child: const Text('Buy office'),
+                                  ),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.blue,
+                                    ),
+                                    onPressed: () => context
+                                        .read<GameEnhancementsBloc>()
+                                        .add(GameEnhancementsCloseEvent()),
+                                    child: const Text('Close'),
+                                  ),
+                                ],
+                              ))
+                            ],
+                          ))
+                    ])
+                  : null));
     });
   }
 }

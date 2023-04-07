@@ -31,6 +31,16 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       emit(state.update(game));
     });
 
+    on<ToolBought>((event, emit) {
+      game.toolBought();
+      emit(state.update(game));
+    });
+
+    on<OfficeImprovement>((event, emit) {
+      game.improveOffice();
+      emit(state.update(game));
+    });
+
     add(GameStarted());
   }
 }
@@ -64,3 +74,7 @@ class GamePublished extends GameEvent {
 }
 
 class DeveloperHired extends GameEvent {}
+
+class ToolBought extends GameEvent {}
+
+class OfficeImprovement extends GameEvent {}

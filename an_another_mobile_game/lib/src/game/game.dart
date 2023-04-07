@@ -1,9 +1,12 @@
 class Game {
-  int money = 0;
+  int money = 2000;
   int lines = 0;
 
   int incomingPerSecond = 0;
   int linesPerSecond = 0;
+
+  int teamSize = 0;
+  int maxTeamSize = 1;
 
   List<GameItem> games = [
     GameItem(size: GameSize.tiny, cost: 100, income: 5),
@@ -14,10 +17,10 @@ class Game {
   ];
 
   Stream<Game> tick() {
-    return Stream.periodic(const Duration(seconds: 1), (tick) => ticked());
+    return Stream.periodic(const Duration(seconds: 1), (tick) => _ticked());
   }
 
-  Game ticked() {
+  Game _ticked() {
     money = money + incomingPerSecond;
     lines = lines + linesPerSecond;
     return this;
@@ -28,22 +31,37 @@ class Game {
   }
 
   void publishGame(GameSize gameSize) {
-    var game = getGame(gameSize);
+    var game = _getGame(gameSize);
     if (lines < game.cost) return;
 
     lines -= game.cost;
     incomingPerSecond += game.income;
   }
 
-  GameItem getGame(GameSize size){
+  GameItem _getGame(GameSize size){
     return games.firstWhere((element) => element.size == size);
   }
 
   void hireDeveloper(int developerLines) {
+    if (money < 1000 || teamSize >= maxTeamSize) return;
+
+    money -= 1000;
+    teamSize++;
+    linesPerSecond += developerLines;
+  }
+
+  void toolBought() {
     if (money < 1000) return;
 
     money -= 1000;
-    linesPerSecond += developerLines;
+    linesPerSecond = 2 * linesPerSecond;
+  }
+
+  void improveOffice() {
+    if (money < 10000) return;
+
+    money -= 10000;
+    maxTeamSize++;
   }
 }
 
