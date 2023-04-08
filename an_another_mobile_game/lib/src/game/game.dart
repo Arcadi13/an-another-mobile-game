@@ -5,7 +5,7 @@ class Game {
     improveOffice(OfficeType.home);
   }
 
-  int money = 40000;
+  int money = 0;
   int lines = 0;
 
   int incomingPerSecond = 0;
@@ -20,10 +20,10 @@ class Game {
   ];
 
   List<Office> availableOffices = [
-    Office(0, OfficeType.home, [OfficeSpace(DeveloperType.fullstack, 1, 0)]),
+    Office(0, OfficeType.home, [DepartmentSize(DeveloperType.fullstack, 1)]),
     Office(10000, OfficeType.garage, [
-      OfficeSpace(DeveloperType.fullstack, 5, 0),
-      OfficeSpace(DeveloperType.artist, 1, 0)
+      DepartmentSize(DeveloperType.fullstack, 5),
+      DepartmentSize(DeveloperType.artist, 1)
     ])
   ];
 
@@ -36,7 +36,8 @@ class Game {
         'Increase your lines per second in 10'),
   ];
 
-  List<Developer> team = [];
+  List<Department> departments = [Department(DeveloperType.fullstack, 1, 0, 1),
+    Department(DeveloperType.artist, 0, 0, 1),];
 
   Stream<Game> tick() {
     return Stream.periodic(const Duration(milliseconds: 100), (tick) => this);
@@ -62,14 +63,14 @@ class Game {
   }
 
   void hireDeveloper(DeveloperType developerType) {
-    var developer = team.firstWhere((element) => element.type == developerType);
-    var space = office.spaces
-        .firstWhere((element) => element.developerType == developerType);
+    var developer = hiring.firstWhere((dev) => dev.type == developerType);
+    var department =
+        departments.firstWhere((dep) => dep.developerType == developerType);
 
-    if (money < developer.cost || space.hired >= space.spaces) {
+    if (money < developer.cost || department.hired >= department.size) {
       return;
     }
-    space.hireDeveloper();
+    department.hireDeveloper();
     money -= developer.cost;
     _calculateLinesPerSecond();
   }
@@ -78,7 +79,7 @@ class Game {
     if (money < 1000) return;
 
     money -= 1000;
-    team.first.increaseMultiplier();
+    departments.first.productivityIncreased();
     _calculateLinesPerSecond();
   }
 
@@ -89,29 +90,34 @@ class Game {
 
     money -= newOffice.cost;
     newOffice.bought = true;
-    _updateTeam(newOffice.spaces);
+    _updateTeam(newOffice.departmentSizes);
     office = newOffice;
   }
 
-  void _updateTeam(List<OfficeSpace> spaces) {
-    for (var space in spaces) {
-      var developer = hiring
-          .firstWhere((developer) => developer.type == space.developerType);
-      if (team.any((element) => element.type == developer.type)) {
+  void _updateTeam(List<DepartmentSize> sizes) {
+    for (var department in departments) {
+      if (!sizes.any(
+          (element) => element.developerType == department.developerType)) {
         continue;
       }
-      team.add(developer);
+
+      var size = sizes
+          .firstWhere(
+              (element) => element.developerType == department.developerType)
+          .size;
+
+      department.expandSize(size);
     }
   }
 
   void _calculateLinesPerSecond() {
     var x = 0;
-    for (Developer developer in team) {
-      x += developer.productivity *
-          office.spaces
-              .firstWhere((element) => element.developerType == developer.type)
-              .hired *
-          developer.multiplier;
+    for (Department department in departments) {
+      x += hiring
+              .firstWhere((element) => element.type == department.developerType)
+              .productivity *
+          department.hired *
+          department.productivityMultiplier;
     }
 
     linesPerSecond = x;
@@ -167,24 +173,37 @@ class Developer {
 }
 
 class Office {
-  Office(this.cost, this.type, this.spaces);
+  Office(this.cost, this.type, this.departmentSizes);
 
   final int cost;
   final OfficeType type;
-  final List<OfficeSpace> spaces;
+  final List<DepartmentSize> departmentSizes;
 
   bool bought = false;
 }
 
-enum OfficeType { home, garage, coworking, floor, building, skyScarper, city }
-
-class OfficeSpace {
-  OfficeSpace(this.developerType, this.spaces, this.hired);
+class DepartmentSize {
+  DepartmentSize(this.developerType, this.size);
 
   final DeveloperType developerType;
-  final int spaces;
+  final int size;
+}
 
+enum OfficeType { home, garage, coworking, floor, building, skyScarper, city }
+
+class Department {
+  Department(
+      this.developerType, this.size, this.hired, this.productivityMultiplier);
+
+  final DeveloperType developerType;
+
+  int size;
   int hired;
+  int productivityMultiplier;
 
   void hireDeveloper() => hired++;
+
+  void productivityIncreased() => productivityMultiplier++;
+
+  void expandSize(int newSize) => size = newSize;
 }
