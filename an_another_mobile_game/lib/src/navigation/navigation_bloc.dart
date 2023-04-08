@@ -8,7 +8,7 @@ class NavigationBloc
     extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc(Game game) : super(ClosedDialogsState()) {
     on<OpenEnhancementsEvent>(
-            (event, emit) => emit(OpenEnhancementsState(game.hiring, game.availableOffices)));
+            (event, emit) => emit(OpenEnhancementsState(game.developers, game.offices)));
 
     on<OpenGamesEvent>(
             (event, emit) => emit(OpenGamesState(game.games)));

@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:an_another_mobile_game/src/game/company.dart';
+
 class Game {
   Game() {
     improveOffice(OfficeType.home);
   }
 
-  int money = 0;
+  int money = 40000;
   int lines = 0;
 
   int incomingPerSecond = 0;
@@ -19,7 +21,7 @@ class Game {
     GameItem(size: GameSize.aaa, cost: 1000000000000, income: 50000),
   ];
 
-  List<Office> availableOffices = [
+  List<Office> offices = [
     Office(0, OfficeType.home, [DepartmentSize(DeveloperType.fullstack, 1)]),
     Office(10000, OfficeType.garage, [
       DepartmentSize(DeveloperType.fullstack, 5),
@@ -27,17 +29,14 @@ class Game {
     ])
   ];
 
-  late Office office;
-
-  List<Developer> hiring = [
+  List<Developer> developers = [
     Developer(DeveloperType.fullstack, 5, 1000, 'Fullstack developer',
         'Increase your lines per second in 5'),
     Developer(DeveloperType.artist, 10, 2000, 'General artist',
         'Increase your lines per second in 10'),
   ];
 
-  List<Department> departments = [Department(DeveloperType.fullstack, 1, 0, 1),
-    Department(DeveloperType.artist, 0, 0, 1),];
+  Company company = Company();
 
   Stream<Game> tick() {
     return Stream.periodic(const Duration(milliseconds: 100), (tick) => this);
@@ -63,15 +62,14 @@ class Game {
   }
 
   void hireDeveloper(DeveloperType developerType) {
-    var developer = hiring.firstWhere((dev) => dev.type == developerType);
-    var department =
-        departments.firstWhere((dep) => dep.developerType == developerType);
+    var developer = developers.firstWhere((dev) => dev.type == developerType);
 
-    if (money < developer.cost || department.hired >= department.size) {
+    if (money < developer.cost || !company.canDepartmentHire(developerType)) {
       return;
     }
-    department.hireDeveloper();
+
     money -= developer.cost;
+    company.hireDeveloper(developerType);
     _calculateLinesPerSecond();
   }
 
@@ -79,45 +77,24 @@ class Game {
     if (money < 1000) return;
 
     money -= 1000;
-    departments.first.productivityIncreased();
+    company.increaseDepartmentProductivity(DeveloperType.fullstack, 1);
     _calculateLinesPerSecond();
   }
 
   void improveOffice(OfficeType type) {
-    var newOffice =
-        availableOffices.firstWhere((element) => element.type == type);
-    if (newOffice.bought || money < newOffice.cost) return;
+    var office = offices.firstWhere((element) => element.type == type);
+    if (office.bought || money < office.cost) return;
 
-    money -= newOffice.cost;
-    newOffice.bought = true;
-    _updateTeam(newOffice.departmentSizes);
-    office = newOffice;
-  }
-
-  void _updateTeam(List<DepartmentSize> sizes) {
-    for (var department in departments) {
-      if (!sizes.any(
-          (element) => element.developerType == department.developerType)) {
-        continue;
-      }
-
-      var size = sizes
-          .firstWhere(
-              (element) => element.developerType == department.developerType)
-          .size;
-
-      department.expandSize(size);
-    }
+    money -= office.cost;
+    office.bought = true;
+    company.updateOffice(office);
   }
 
   void _calculateLinesPerSecond() {
     var x = 0;
-    for (Department department in departments) {
-      x += hiring
-              .firstWhere((element) => element.type == department.developerType)
-              .productivity *
-          department.hired *
-          department.productivityMultiplier;
+    for (Developer developer in developers) {
+      x += developer.productivity *
+          company.getDepartmentProductivity(developer.type);
     }
 
     linesPerSecond = x;
@@ -193,13 +170,13 @@ enum OfficeType { home, garage, coworking, floor, building, skyScarper, city }
 
 class Department {
   Department(
-      this.developerType, this.size, this.hired, this.productivityMultiplier);
+      this.developerType);
 
   final DeveloperType developerType;
 
-  int size;
-  int hired;
-  int productivityMultiplier;
+  int size = 0;
+  int hired = 0;
+  int productivityMultiplier = 1;
 
   void hireDeveloper() => hired++;
 
