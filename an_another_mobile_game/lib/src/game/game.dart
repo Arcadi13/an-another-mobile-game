@@ -1,3 +1,5 @@
+import 'dart:async';
+
 class Game {
   Game() {
     team.add(HiredDeveloper(
@@ -38,14 +40,10 @@ class Game {
   List<HiredDeveloper> team = [];
 
   Stream<Game> tick() {
-    return Stream.periodic(const Duration(seconds: 1), (tick) => _ticked());
+    return Stream.periodic(const Duration(milliseconds: 100), (tick) => this);
   }
 
-  Game _ticked() {
-    money = money + incomingPerSecond;
-    lines = lines + linesPerSecond;
-    return this;
-  }
+  void timer() => Timer.periodic(const Duration(seconds: 1), (timer) => _increasePerSecond());
 
   void writeLine() {
     lines++;
@@ -94,6 +92,11 @@ class Game {
     }
 
     linesPerSecond = x;
+  }
+
+  _increasePerSecond() {
+    money += incomingPerSecond;
+    lines += linesPerSecond;
   }
 }
 
