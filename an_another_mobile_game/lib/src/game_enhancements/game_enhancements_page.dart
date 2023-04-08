@@ -65,19 +65,23 @@ class GameEnhancementsWidget extends StatelessWidget {
                                   ],
                                 )),
                                 Center(
-                                    child: Column(
-                                  children: [
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                      onPressed: () => context
-                                          .read<GameBloc>()
-                                          .add(OfficeImprovement()),
-                                      child: const Text('Buy office'),
-                                    ),
-                                  ],
-                                ))
+                                    child: ListView.builder(
+                                        itemCount: state.offices.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                            ),
+                                            onPressed: () => context
+                                                .read<GameBloc>()
+                                                .add(OfficeImprovement(
+                                                    state.offices[index].type)),
+                                            child: Text(state
+                                                .offices[index].type
+                                                .toString()),
+                                          );
+                                        }))
                               ],
                             )),
                         IconButton(

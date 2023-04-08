@@ -2,10 +2,7 @@ import 'dart:async';
 
 class Game {
   Game() {
-    team.add(HiredDeveloper(
-        hiring.firstWhere((element) => element.type == DeveloperType.fullstack),
-        1,
-        0));
+    improveOffice(OfficeType.home);
   }
 
   int money = 40000;
@@ -22,28 +19,31 @@ class Game {
     GameItem(size: GameSize.aaa, cost: 1000000000000, income: 50000),
   ];
 
-  List<Developer> hiring = [
-    Developer(
-        type: DeveloperType.fullstack,
-        productivity: 5,
-        cost: 1000,
-        title: 'Fullstack developer',
-        description: 'Increase your lines per second in 5'),
-    Developer(
-        type: DeveloperType.artist,
-        productivity: 10,
-        cost: 2000,
-        title: 'General artist',
-        description: 'Increase your lines per second in 10'),
+  List<Office> availableOffices = [
+    Office(0, OfficeType.home, [OfficeSpace(DeveloperType.fullstack, 1, 0)]),
+    Office(10000, OfficeType.garage, [
+      OfficeSpace(DeveloperType.fullstack, 5, 0),
+      OfficeSpace(DeveloperType.artist, 1, 0)
+    ])
   ];
 
-  List<HiredDeveloper> team = [];
+  late Office office;
+
+  List<Developer> hiring = [
+    Developer(DeveloperType.fullstack, 5, 1000, 'Fullstack developer',
+        'Increase your lines per second in 5'),
+    Developer(DeveloperType.artist, 10, 2000, 'General artist',
+        'Increase your lines per second in 10'),
+  ];
+
+  List<Developer> team = [];
 
   Stream<Game> tick() {
     return Stream.periodic(const Duration(milliseconds: 100), (tick) => this);
   }
 
-  void timer() => Timer.periodic(const Duration(seconds: 1), (timer) => _increasePerSecond());
+  void timer() =>
+      Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
 
   void writeLine() {
     lines++;
@@ -62,11 +62,15 @@ class Game {
   }
 
   void hireDeveloper(DeveloperType developerType) {
-    var developer =
-        team.firstWhere((element) => element.developer.type == developerType);
-    if (money < developer.developer.cost || !developer.hireDeveloper()) return;
+    var developer = team.firstWhere((element) => element.type == developerType);
+    var space = office.spaces
+        .firstWhere((element) => element.developerType == developerType);
 
-    money -= developer.developer.cost;
+    if (money < developer.cost || space.hired >= space.spaces) {
+      return;
+    }
+    space.hireDeveloper();
+    money -= developer.cost;
     _calculateLinesPerSecond();
   }
 
@@ -78,23 +82,42 @@ class Game {
     _calculateLinesPerSecond();
   }
 
-  void improveOffice() {
-    if (money < 10000) return;
+  void improveOffice(OfficeType type) {
+    var newOffice =
+        availableOffices.firstWhere((element) => element.type == type);
+    if (newOffice.bought || money < newOffice.cost) return;
 
-    money -= 10000;
-    team.first.increaseTeamSize();
+    money -= newOffice.cost;
+    newOffice.bought = true;
+    _updateTeam(newOffice.spaces);
+    office = newOffice;
+  }
+
+  void _updateTeam(List<OfficeSpace> spaces) {
+    for (var space in spaces) {
+      var developer = hiring
+          .firstWhere((developer) => developer.type == space.developerType);
+      if (team.any((element) => element.type == developer.type)) {
+        continue;
+      }
+      team.add(developer);
+    }
   }
 
   void _calculateLinesPerSecond() {
     var x = 0;
-    for (HiredDeveloper developer in team) {
-      x += developer.developer.productivity * developer.hired * developer.multiplier;
+    for (Developer developer in team) {
+      x += developer.productivity *
+          office.spaces
+              .firstWhere((element) => element.developerType == developer.type)
+              .hired *
+          developer.multiplier;
     }
 
     linesPerSecond = x;
   }
 
-  _increasePerSecond() {
+  _incomePerSecond() {
     money += incomingPerSecond;
     lines += linesPerSecond;
   }
@@ -130,39 +153,38 @@ enum DeveloperType {
 
 class Developer {
   Developer(
-      {required this.type,
-      required this.productivity,
-      required this.cost,
-      required this.title,
-      required this.description});
+      this.type, this.productivity, this.cost, this.title, this.description);
 
   final DeveloperType type;
   final int productivity;
   final int cost;
   final String title;
   final String description;
-}
 
-class HiredDeveloper {
-  HiredDeveloper(this.developer, this.teamSize, this.hired);
-
-  final Developer developer;
-  int teamSize;
-  int hired;
   int multiplier = 1;
 
-  bool hireDeveloper() {
-    if (hired >= teamSize) return false;
+  void increaseMultiplier() => multiplier++;
+}
 
-    hired++;
-    return true;
-  }
+class Office {
+  Office(this.cost, this.type, this.spaces);
 
-  void increaseTeamSize() {
-    teamSize++;
-  }
+  final int cost;
+  final OfficeType type;
+  final List<OfficeSpace> spaces;
 
-  void increaseMultiplier() {
-    multiplier++;
-  }
+  bool bought = false;
+}
+
+enum OfficeType { home, garage, coworking, floor, building, skyScarper, city }
+
+class OfficeSpace {
+  OfficeSpace(this.developerType, this.spaces, this.hired);
+
+  final DeveloperType developerType;
+  final int spaces;
+
+  int hired;
+
+  void hireDeveloper() => hired++;
 }

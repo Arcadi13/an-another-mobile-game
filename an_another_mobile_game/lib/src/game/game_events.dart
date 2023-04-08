@@ -22,4 +22,8 @@ class DeveloperHired extends GameEvent {
 
 class ToolBought extends GameEvent {}
 
-class OfficeImprovement extends GameEvent {}
+class OfficeImprovement extends GameEvent {
+  OfficeImprovement(this.officeType);
+
+  final OfficeType officeType;
+}
