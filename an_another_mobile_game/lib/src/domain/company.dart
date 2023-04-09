@@ -1,4 +1,7 @@
-import 'game.dart';
+import 'department.dart';
+import 'department_size.dart';
+import 'developer.dart';
+import 'office.dart';
 
 class Company {
   late Office office;

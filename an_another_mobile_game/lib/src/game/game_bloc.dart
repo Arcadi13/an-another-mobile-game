@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'game.dart';
+import '../domain/game.dart';
 import 'game_events.dart';
 import 'game_states.dart';
 
@@ -26,7 +26,8 @@ class GameBloc extends Bloc<GameEvent, GameState> {
 
     on<ToolBought>((event, emit) => game.toolBought());
 
-    on<OfficeImprovement>((event, emit) => game.improveOffice(event.officeType));
+    on<OfficeImprovement>(
+        (event, emit) => game.improveOffice(event.officeType));
 
     add(GameStarted());
   }

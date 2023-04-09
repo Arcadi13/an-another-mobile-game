@@ -1,6 +1,10 @@
 import 'dart:async';
 
-import 'package:an_another_mobile_game/src/game/company.dart';
+import 'company.dart';
+import 'department_size.dart';
+import 'developer.dart';
+import 'game_item.dart';
+import 'office.dart';
 
 class Game {
   Game() {
@@ -104,83 +108,4 @@ class Game {
     money += incomingPerSecond;
     lines += linesPerSecond;
   }
-}
-
-enum GameSize { tiny, small, medium, large, aaa }
-
-// TODO find better naming
-class GameItem {
-  GameItem({required this.size, required this.cost, required this.income});
-
-  final GameSize size;
-  final int cost;
-  final int income;
-}
-
-enum DeveloperType {
-  fullstack,
-  artist,
-  uiDesigner,
-  gameArtist,
-  animator,
-  programmer,
-  gameDesigner,
-  soundEngineer,
-  creativeDirector,
-  marketing,
-  systemDesigner,
-  toolDesigner,
-  vfxArtist,
-  levelDesigner
-}
-
-class Developer {
-  Developer(
-      this.type, this.productivity, this.cost, this.title, this.description);
-
-  final DeveloperType type;
-  final int productivity;
-  final int cost;
-  final String title;
-  final String description;
-
-  int multiplier = 1;
-
-  void increaseMultiplier() => multiplier++;
-}
-
-class Office {
-  Office(this.cost, this.type, this.departmentSizes);
-
-  final int cost;
-  final OfficeType type;
-  final List<DepartmentSize> departmentSizes;
-
-  bool bought = false;
-}
-
-class DepartmentSize {
-  DepartmentSize(this.developerType, this.size);
-
-  final DeveloperType developerType;
-  final int size;
-}
-
-enum OfficeType { home, garage, coworking, floor, building, skyScarper, city }
-
-class Department {
-  Department(
-      this.developerType);
-
-  final DeveloperType developerType;
-
-  int size = 0;
-  int hired = 0;
-  int productivityMultiplier = 1;
-
-  void hireDeveloper() => hired++;
-
-  void productivityIncreased() => productivityMultiplier++;
-
-  void expandSize(int newSize) => size = newSize;
 }

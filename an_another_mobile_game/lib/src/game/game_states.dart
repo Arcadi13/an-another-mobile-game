@@ -1,4 +1,4 @@
-import 'game.dart';
+import '../domain/game.dart';
 
 class GameState {
   GameState(this.money, this.lines, this.incomePerSecond, this.linesPerSecond);
