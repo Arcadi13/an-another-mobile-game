@@ -7,7 +7,7 @@ import 'navigation_states.dart';
 class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
   NavigationBloc(Game game) : super(ClosedDialogsState()) {
     on<OpenEnhancementsEvent>((event, emit) =>
-        emit(OpenEnhancementsState(game.developers, game.offices)));
+        emit(OpenEnhancementsState(game.developers, game.offices, game.enhancements)));
 
     on<OpenGamesEvent>((event, emit) => emit(OpenGamesState(game.games)));
 

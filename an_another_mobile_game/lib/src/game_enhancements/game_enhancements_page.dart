@@ -51,19 +51,23 @@ class GameEnhancementsWidget extends StatelessWidget {
                                           );
                                         })),
                                 Center(
-                                    child: Column(
-                                  children: [
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.blue,
-                                      ),
-                                      onPressed: () => context
-                                          .read<GameBloc>()
-                                          .add(ToolBought()),
-                                      child: const Text('Buy hardware'),
-                                    ),
-                                  ],
-                                )),
+                                    child: ListView.builder(
+                                        itemCount: state.enhancements.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                            ),
+                                            onPressed: () => context
+                                                .read<GameBloc>()
+                                                .add(ToolBought(
+                                                    state.enhancements[index])),
+                                            child: Text(state
+                                                .enhancements[index].name
+                                                .toString()),
+                                          );
+                                        })),
                                 Center(
                                     child: ListView.builder(
                                         itemCount: state.offices.length,

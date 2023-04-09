@@ -1,3 +1,5 @@
+import 'package:an_another_mobile_game/src/domain/enhancement.dart';
+
 import '../domain/developer.dart';
 import '../domain/game_item.dart';
 import '../domain/office.dart';
@@ -22,7 +24,11 @@ class DeveloperHired extends GameEvent {
   final DeveloperType developerType;
 }
 
-class ToolBought extends GameEvent {}
+class ToolBought extends GameEvent {
+  ToolBought(this.enhancement);
+
+  final Enhancement enhancement;
+}
 
 class OfficeImprovement extends GameEvent {
   OfficeImprovement(this.officeType);

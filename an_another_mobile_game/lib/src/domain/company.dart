@@ -32,7 +32,7 @@ class Company {
   void increaseDepartmentProductivity(
       DeveloperType developerType, int multiplier) {
     var department = _getDepartment(developerType);
-    department?.productivityIncreased();
+    department?.productivityIncreased(multiplier);
   }
 
   void updateOffice(Office office) {

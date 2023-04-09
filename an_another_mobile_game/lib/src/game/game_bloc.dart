@@ -24,7 +24,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<DeveloperHired>(
         (event, emit) => game.hireDeveloper(event.developerType));
 
-    on<ToolBought>((event, emit) => game.toolBought());
+    on<ToolBought>((event, emit) => game.toolBought(event.enhancement));
 
     on<OfficeImprovement>(
         (event, emit) => game.improveOffice(event.officeType));

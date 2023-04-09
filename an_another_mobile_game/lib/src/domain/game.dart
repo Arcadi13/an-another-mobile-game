@@ -3,6 +3,7 @@ import 'dart:async';
 import 'company.dart';
 import 'department_size.dart';
 import 'developer.dart';
+import 'enhancement.dart';
 import 'game_item.dart';
 import 'office.dart';
 
@@ -38,6 +39,11 @@ class Game {
         'Increase your lines per second in 5'),
     Developer(DeveloperType.artist, 10, 2000, 'General artist',
         'Increase your lines per second in 10'),
+  ];
+
+  List<Enhancement> enhancements = [
+    Enhancement(DeveloperType.fullstack, 2, 1000, 'Engine License',
+        'Increase your fullstack developers productivity 100%')
   ];
 
   Company company = Company();
@@ -77,11 +83,12 @@ class Game {
     _calculateLinesPerSecond();
   }
 
-  void toolBought() {
-    if (money < 1000) return;
+  void toolBought(Enhancement enhancement) {
+    if (money < enhancement.cost || enhancement.acquired) return;
 
-    money -= 1000;
-    company.increaseDepartmentProductivity(DeveloperType.fullstack, 1);
+    money -= enhancement.cost;
+    enhancement.enhancementAcquired();
+    company.increaseDepartmentProductivity(DeveloperType.fullstack, enhancement.multiplier);
     _calculateLinesPerSecond();
   }
 
