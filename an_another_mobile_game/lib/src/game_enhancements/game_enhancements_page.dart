@@ -1,62 +1,147 @@
+import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
+import 'package:an_another_mobile_game/src/navigation/navigation_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../game/game.dart';
 import '../game/game_bloc.dart';
-
-class GameEnhancementsBloc
-    extends Bloc<GameEnhancementsEvent, GameEnhancementsState> {
-  GameEnhancementsBloc(Game game) : super(GameEnhancementsClosedState()) {
-    on<GameEnhancementsOpenEvent>(
-        (event, emit) => emit(GameEnhancementsOpenState()));
-
-    on<GameEnhancementsCloseEvent>(
-        (event, emit) => emit(GameEnhancementsClosedState()));
-
-    add(GameEnhancementsCloseEvent());
-  }
-}
-
-abstract class GameEnhancementsEvent {}
-
-class GameEnhancementsOpenEvent extends GameEnhancementsEvent {}
-
-class GameEnhancementsCloseEvent extends GameEnhancementsEvent {}
-
-abstract class GameEnhancementsState {}
-
-class GameEnhancementsOpenState extends GameEnhancementsState {}
-
-class GameEnhancementsClosedState extends GameEnhancementsState {}
+import '../game/game_events.dart';
+import '../navigation/navigation_bloc.dart';
 
 class GameEnhancementsWidget extends StatelessWidget {
   const GameEnhancementsWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GameEnhancementsBloc, GameEnhancementsState>(
-        builder: (context, state) {
-      return Dialog(
-          child: state is GameEnhancementsOpenState
-              ? Column(children: <Widget>[
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
+    return BlocBuilder<NavigationBloc, NavigationState>(
+      builder: (context, state) {
+        return DefaultTabController(
+            length: 3,
+            child: Dialog(
+                child: state is OpenEnhancementsState
+                    ? Column(mainAxisSize: MainAxisSize.min, children: [
+                        const TabBar(
+                          tabs: [
+                            Tab(
+                                icon: Icon(Icons.account_circle,
+                                    color: Colors.blue)),
+                            Tab(icon: Icon(Icons.computer, color: Colors.blue)),
+                            Tab(icon: Icon(Icons.house, color: Colors.blue))
+                          ],
+                          isScrollable: false,
+                        ),
+                        SizedBox(
+                            height: 300,
+                            child: TabBarView(
+                              children: [
+                                Center(
+                                    child: ListView.builder(
+                                        itemCount: state.developers.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                            ),
+                                            onPressed: () => context
+                                                .read<GameBloc>()
+                                                .add(DeveloperHired(state
+                                                    .developers[index].type)),
+                                            child: Text(
+                                                state.developers[index].title),
+                                          );
+                                        })),
+                                Center(
+                                    child: ListView.builder(
+                                        itemCount: state.enhancements.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                            ),
+                                            onPressed: () => context
+                                                .read<GameBloc>()
+                                                .add(ToolBought(
+                                                    state.enhancements[index])),
+                                            child: Text(state
+                                                .enhancements[index].name
+                                                .toString()),
+                                          );
+                                        })),
+                                Center(
+                                    child: ListView.builder(
+                                        itemCount: state.offices.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.blue,
+                                            ),
+                                            onPressed: () => context
+                                                .read<GameBloc>()
+                                                .add(OfficeImprovement(
+                                                    state.offices[index].type)),
+                                            child: Text(state
+                                                .offices[index].type
+                                                .toString()),
+                                          );
+                                        }))
+                              ],
+                            )),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.blue,
+                          ),
+                          alignment: Alignment.topRight,
+                          onPressed: () => context
+                              .read<NavigationBloc>()
+                              .add(CloseDialogEvent()),
+                        ),
+                      ])
+                    : null));
+      },
+    );
+  }
+}
+
+class PublishGamesWidget extends StatelessWidget {
+  const PublishGamesWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<NavigationBloc, NavigationState>(
+      builder: (context, state) {
+        return Dialog(
+            child: state is OpenGamesState
+                ? Column(mainAxisSize: MainAxisSize.min, children: [
+                    SizedBox(
+                        height: 300,
+                        child: ListView.builder(
+                            itemCount: state.games.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return TextButton(
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.blue,
+                                ),
+                                onPressed: () => context.read<GameBloc>().add(
+                                    GamePublished(state.games[index].size)),
+                                child: Text(state.games[index].size.toString()),
+                              );
+                            })),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.blue,
+                      ),
+                      alignment: Alignment.topRight,
+                      onPressed: () => context
+                          .read<NavigationBloc>()
+                          .add(CloseDialogEvent()),
                     ),
-                    onPressed: () =>
-                        context.read<GameBloc>().add(DeveloperHired()),
-                    child: const Text('Hire developer'),
-                  ),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.blue,
-                    ),
-                    onPressed: () =>
-                        context.read<GameEnhancementsBloc>().add(GameEnhancementsCloseEvent()),
-                    child: const Text('Close'),
-                  ),
-                ])
-              : null);
-    });
+                  ])
+                : null);
+      },
+    );
   }
 }
