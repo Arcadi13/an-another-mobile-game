@@ -9,7 +9,7 @@ class Enhancement {
       required this.description});
 
   Enhancement.fromJson(Map<String, Object?> json):this(
-    developerType: _developerTypeFromString(json['type']! as String),
+    developerType: _developerTypeFromString(json['developerType']! as String),
     multiplier: json['multiplier']! as int,
     cost: json['cost']! as int,
     name: json['name']! as String,

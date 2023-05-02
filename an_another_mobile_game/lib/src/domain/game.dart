@@ -60,6 +60,7 @@ class Game {
     games = record.games;
     offices = record.offices;
     developers = record.developers;
+    enhancements = record.enhancements;
   }
 
   Game(){
