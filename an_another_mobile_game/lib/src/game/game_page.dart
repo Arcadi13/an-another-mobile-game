@@ -1,6 +1,8 @@
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -10,14 +12,15 @@ import 'game_events.dart';
 import 'game_states.dart';
 
 class GamePage extends StatelessWidget {
-  GamePage({super.key});
+  const GamePage({super.key, required this.game});
 
-  final Game game = Game();
+  final Game game;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<GameBloc>(create: (BuildContext context) => GameBloc(game)),
+      BlocProvider<GameBloc>(
+          create: (BuildContext context) => GameBloc(game)),
       BlocProvider<NavigationBloc>(
           create: (BuildContext context) => NavigationBloc(game)),
     ], child: const GameWidget());

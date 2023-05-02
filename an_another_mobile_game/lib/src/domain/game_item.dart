@@ -4,7 +4,31 @@ enum GameSize { tiny, small, medium, large, aaa }
 class GameItem {
   GameItem({required this.size, required this.cost, required this.income});
 
+  GameItem.fromJson(Map<String, Object?> json)
+      : this(
+          size: _gameSizeFromString(json['size']! as String),
+          cost: json['cost']! as int,
+          income: json['income']! as int,
+        );
+
   final GameSize size;
   final int cost;
   final int income;
+
+  Map<String, Object?> toJson (){
+    return {
+      'size': _stringFromGameSize(size),
+      'cost': cost,
+      'income': income,
+    };
+  }
+
+  static GameSize _gameSizeFromString(String size) {
+    return GameSize.values.firstWhere((e) =>
+        e.toString().toLowerCase().split('.').last == size.toLowerCase());
+  }
+
+  static String _stringFromGameSize(GameSize size) {
+    return size.toString().toLowerCase().split('.').last;
+  }
 }

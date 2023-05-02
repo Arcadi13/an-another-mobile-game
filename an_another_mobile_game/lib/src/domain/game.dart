@@ -1,51 +1,79 @@
 import 'dart:async';
 
 import 'company.dart';
-import 'department_size.dart';
 import 'developer.dart';
 import 'enhancement.dart';
 import 'game_item.dart';
 import 'office.dart';
 
+class GameRecord {
+  GameRecord({
+    required this.money,
+    required this.lines,
+    required this.incomingPerSecond,
+    required this.linesPerSecond,
+    required this.games,
+    required this.offices,
+    required this.developers,
+    required this.enhancements,
+  });
+
+  GameRecord.fromJson(Map<String, dynamic> json) : this (
+    money: json['money']! as int,
+    lines: json['lines']! as int,
+    incomingPerSecond: json['incomingPerSecond']! as int,
+    linesPerSecond: json['linesPerSecond']! as int,
+    games: List<GameItem>.from(json['games']!.map((game) => GameItem.fromJson(game))),
+    offices: List<Office>.from(json['offices']!.map((office) => Office.fromJson(office))),
+    developers: List<Developer>.from(json['developers']!.map((developer) => Developer.fromJson(developer))),
+    enhancements: List<Enhancement>.from(json['enhancements']!.map((enhancement) => Enhancement.fromJson(enhancement))),
+  );
+
+  final int money;
+  final int lines;
+  final int incomingPerSecond;
+  final int linesPerSecond;
+  final List<GameItem> games;
+  final List<Office> offices;
+  final List<Developer> developers;
+  final List<Enhancement> enhancements;
+
+  Map<String, Object?> toJson (){
+    return {
+      'money': money,
+      'lines': lines,
+      'incomingPerSecond': incomingPerSecond,
+      'linesPerSecond': linesPerSecond,
+      'games': games.map((game) => game.toJson()).toList(),
+    };
+  }
+
+}
+
 class Game {
-  Game() {
+// Game({required this.money, required this.lines, required this.incomingPerSecond, required this.linesPerSecond})
+  Game.fromRecord(GameRecord record){
+    money = record.money;
+    lines = record.lines;
+    incomingPerSecond = record.incomingPerSecond;
+    linesPerSecond = record.linesPerSecond;
+    games = record.games;
+    offices = record.offices;
+    developers = record.developers;
+  }
+
+  Game(){
     improveOffice(OfficeType.home);
   }
 
-  int money = 40000;
+  int money = 0;
   int lines = 0;
-
   int incomingPerSecond = 0;
   int linesPerSecond = 0;
-
-  List<GameItem> games = [
-    GameItem(size: GameSize.tiny, cost: 100, income: 5),
-    GameItem(size: GameSize.small, cost: 10000, income: 50),
-    GameItem(size: GameSize.medium, cost: 1000000, income: 500),
-    GameItem(size: GameSize.large, cost: 1000000000, income: 5000),
-    GameItem(size: GameSize.aaa, cost: 1000000000000, income: 50000),
-  ];
-
-  List<Office> offices = [
-    Office(0, OfficeType.home, [DepartmentSize(DeveloperType.fullstack, 1)]),
-    Office(10000, OfficeType.garage, [
-      DepartmentSize(DeveloperType.fullstack, 5),
-      DepartmentSize(DeveloperType.artist, 1)
-    ])
-  ];
-
-  List<Developer> developers = [
-    Developer(DeveloperType.fullstack, 5, 1000, 'Fullstack developer',
-        'Increase your lines per second in 5'),
-    Developer(DeveloperType.artist, 10, 2000, 'General artist',
-        'Increase your lines per second in 10'),
-  ];
-
-  List<Enhancement> enhancements = [
-    Enhancement(DeveloperType.fullstack, 2, 1000, 'Engine License',
-        'Increase your fullstack developers productivity 100%')
-  ];
-
+  List<GameItem> games = [];
+  List<Office> offices = [];
+  List<Developer> developers = [];
+  List<Enhancement> enhancements = [];
   Company company = Company();
 
   Stream<Game> tick() {
@@ -88,7 +116,8 @@ class Game {
 
     money -= enhancement.cost;
     enhancement.enhancementAcquired();
-    company.increaseDepartmentProductivity(DeveloperType.fullstack, enhancement.multiplier);
+    company.increaseDepartmentProductivity(
+        DeveloperType.fullstack, enhancement.multiplier);
     _calculateLinesPerSecond();
   }
 
