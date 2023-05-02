@@ -1,3 +1,4 @@
+import '../domain/department.dart';
 import '../domain/developer.dart';
 import '../domain/enhancement.dart';
 import '../domain/game_item.dart';

@@ -22,10 +22,11 @@ class GameEnhancementsWidget extends StatelessWidget {
                         const TabBar(
                           tabs: [
                             Tab(
-                                icon: Icon(Icons.account_circle,
-                                    color: Colors.blue)),
-                            Tab(icon: Icon(Icons.computer, color: Colors.blue)),
-                            Tab(icon: Icon(Icons.house, color: Colors.blue))
+                                icon: Icon(
+                              Icons.account_circle,
+                            )),
+                            Tab(icon: Icon(Icons.computer)),
+                            Tab(icon: Icon(Icons.house))
                           ],
                           isScrollable: false,
                         ),
@@ -38,16 +39,27 @@ class GameEnhancementsWidget extends StatelessWidget {
                                         itemCount: state.developers.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          return TextButton(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.blue,
-                                            ),
-                                            onPressed: () => context
+                                          return GestureDetector(
+                                            onTap: () => context
                                                 .read<GameBloc>()
                                                 .add(DeveloperHired(state
                                                     .developers[index].type)),
-                                            child: Text(
-                                                state.developers[index].title),
+                                            child: Column(
+                                              children: [
+                                                const SizedBox(height: 10),
+                                                Text(state
+                                                    .developers[index].title),
+                                                const SizedBox(height: 5),
+                                                Text(state.developers[index]
+                                                    .description),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                    'Cost: ${state.developers[index].cost}\$'),
+                                                const SizedBox(height: 5),
+                                                Text('X/Y hired'),
+                                                const SizedBox(height: 10),
+                                              ],
+                                            ),
                                           );
                                         })),
                                 Center(
@@ -55,17 +67,18 @@ class GameEnhancementsWidget extends StatelessWidget {
                                         itemCount: state.enhancements.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          return TextButton(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.blue,
-                                            ),
-                                            onPressed: () => context
+                                          return GestureDetector(
+                                            onTap: () => context
                                                 .read<GameBloc>()
                                                 .add(ToolBought(
                                                     state.enhancements[index])),
-                                            child: Text(state
-                                                .enhancements[index].name
-                                                .toString()),
+                                            child: Column(
+                                              children: [
+                                                Text(state
+                                                    .enhancements[index].name
+                                                    .toString()),
+                                              ],
+                                            ),
                                           );
                                         })),
                                 Center(
@@ -73,17 +86,17 @@ class GameEnhancementsWidget extends StatelessWidget {
                                         itemCount: state.offices.length,
                                         itemBuilder:
                                             (BuildContext context, int index) {
-                                          return TextButton(
-                                            style: TextButton.styleFrom(
-                                              foregroundColor: Colors.blue,
-                                            ),
-                                            onPressed: () => context
+                                          return GestureDetector(
+                                            onTap: () => context
                                                 .read<GameBloc>()
                                                 .add(OfficeImprovement(
                                                     state.offices[index].type)),
-                                            child: Text(state
-                                                .offices[index].type
-                                                .toString()),
+                                            child: Column(
+                                              children: [
+                                                Text(state.offices[index].type
+                                                    .toString()),
+                                              ],
+                                            ),
                                           );
                                         }))
                               ],
@@ -91,7 +104,6 @@ class GameEnhancementsWidget extends StatelessWidget {
                         IconButton(
                           icon: const Icon(
                             Icons.close,
-                            color: Colors.blue,
                           ),
                           alignment: Alignment.topRight,
                           onPressed: () => context
@@ -117,22 +129,42 @@ class PublishGamesWidget extends StatelessWidget {
                 ? Column(mainAxisSize: MainAxisSize.min, children: [
                     SizedBox(
                         height: 300,
-                        child: ListView.builder(
+                        child: ListView.separated(
+                            separatorBuilder: (context, index) => Divider(
+                                  color: Theme.of(context).primaryColor,
+                                ),
                             itemCount: state.games.length,
                             itemBuilder: (BuildContext context, int index) {
-                              return TextButton(
-                                style: TextButton.styleFrom(
-                                  foregroundColor: Colors.blue,
-                                ),
-                                onPressed: () => context.read<GameBloc>().add(
+                              return GestureDetector(
+                                onTap: () => context.read<GameBloc>().add(
                                     GamePublished(state.games[index].size)),
-                                child: Text(state.games[index].size.toString()),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    Text(state.games[index].title,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                        '+${state.games[index].income}\$ per second',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                        'Cost: ${state.games[index].cost} lines',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    const SizedBox(height: 10),
+                                  ],
+                                ),
                               );
                             })),
                     IconButton(
                       icon: const Icon(
                         Icons.close,
-                        color: Colors.blue,
                       ),
                       alignment: Alignment.topRight,
                       onPressed: () => context
