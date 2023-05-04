@@ -9,6 +9,7 @@ class GameItem {
           size: _gameSizeFromString(json['size']! as String),
           cost: json['cost']! as int,
           income: json['income']! as int,
+          title: json['title']! as String,
         );
 
   final GameSize size;

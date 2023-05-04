@@ -61,9 +61,7 @@ class Game {
     offices = record.offices;
     developers = record.developers;
     enhancements = record.enhancements;
-  }
 
-  Game(){
     improveOffice(OfficeType.home);
   }
 

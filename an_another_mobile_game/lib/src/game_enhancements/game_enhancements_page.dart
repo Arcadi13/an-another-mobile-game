@@ -5,11 +5,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../game/game_bloc.dart';
 import '../game/game_events.dart';
+import '../game/game_states.dart';
 import '../navigation/navigation_bloc.dart';
 
-class GameEnhancementsWidget extends StatelessWidget {
-  const GameEnhancementsWidget({super.key});
+class GameEnhancementsWidget extends StatefulWidget {
+  const GameEnhancementsWidget({Key? key}) : super(key: key);
 
+  @override
+  GameEnhancementsWidgetState createState() => GameEnhancementsWidgetState();
+}
+
+class GameEnhancementsWidgetState extends State<GameEnhancementsWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NavigationBloc, NavigationState>(
@@ -35,33 +41,47 @@ class GameEnhancementsWidget extends StatelessWidget {
                             child: TabBarView(
                               children: [
                                 Center(
-                                    child: ListView.builder(
-                                        itemCount: state.developers.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return GestureDetector(
-                                            onTap: () => context
-                                                .read<GameBloc>()
-                                                .add(DeveloperHired(state
-                                                    .developers[index].type)),
-                                            child: Column(
-                                              children: [
-                                                const SizedBox(height: 10),
-                                                Text(state
-                                                    .developers[index].title),
-                                                const SizedBox(height: 5),
-                                                Text(state.developers[index]
-                                                    .description),
-                                                const SizedBox(height: 5),
-                                                Text(
-                                                    'Cost: ${state.developers[index].cost}\$'),
-                                                const SizedBox(height: 5),
-                                                Text('X/Y hired'),
-                                                const SizedBox(height: 10),
-                                              ],
-                                            ),
-                                          );
-                                        })),
+                                    child: (BlocBuilder<GameBloc, GameState>(
+                                        builder: (context, state2) {
+                                  return ListView.builder(
+                                      itemCount: state.developers.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        if (state.game.company.departments
+                                                .firstWhere((element) =>
+                                                    element.developerType ==
+                                                    state
+                                                        .developers[index].type)
+                                                .size ==
+                                            0) {
+                                          return Container();
+                                        }
+
+                                        return GestureDetector(
+                                          onTap: () => context
+                                              .read<GameBloc>()
+                                              .add(DeveloperHired(state
+                                                  .developers[index].type)),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(height: 10),
+                                              Text(state
+                                                  .developers[index].title),
+                                              const SizedBox(height: 5),
+                                              Text(state.developers[index]
+                                                  .description),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                  'Cost: ${state.developers[index].cost}\$'),
+                                              const SizedBox(height: 5),
+                                              Text(
+                                                  '${state.game.company.departments.firstWhere((element) => element.developerType == state.developers[index].type).hired}/${state.game.company.departments.firstWhere((element) => element.developerType == state.developers[index].type).size} hired'),
+                                              const SizedBox(height: 10),
+                                            ],
+                                          ),
+                                        );
+                                      });
+                                }))),
                                 Center(
                                     child: ListView.builder(
                                         itemCount: state.enhancements.length,
@@ -74,9 +94,17 @@ class GameEnhancementsWidget extends StatelessWidget {
                                                     state.enhancements[index])),
                                             child: Column(
                                               children: [
+                                                const SizedBox(height: 10),
                                                 Text(state
                                                     .enhancements[index].name
                                                     .toString()),
+                                                const SizedBox(height: 5),
+                                                Text(state.enhancements[index]
+                                                    .description),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                    'Cost: ${state.enhancements[index].cost}\$'),
+                                                const SizedBox(height: 10),
                                               ],
                                             ),
                                           );
@@ -93,8 +121,16 @@ class GameEnhancementsWidget extends StatelessWidget {
                                                     state.offices[index].type)),
                                             child: Column(
                                               children: [
-                                                Text(state.offices[index].type
-                                                    .toString()),
+                                                const SizedBox(height: 10),
+                                                Text(
+                                                    state.offices[index].title),
+                                                const SizedBox(height: 5),
+                                                Text(state.offices[index]
+                                                    .description),
+                                                const SizedBox(height: 5),
+                                                Text(
+                                                    'Cost: ${state.developers[index].cost}\$'),
+                                                const SizedBox(height: 10),
                                               ],
                                             ),
                                           );
