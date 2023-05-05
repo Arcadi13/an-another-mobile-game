@@ -18,11 +18,11 @@ class GamePublished extends GameEvent {
   final GameSize size;
 }
 
-class DeveloperHired extends GameEvent {
-  DeveloperHired(this.developerType);
-
-  final DeveloperType developerType;
-}
+// class DeveloperHired extends GameEvent {
+//   DeveloperHired(this.developerType);
+//
+//   final DeveloperType developerType;
+// }
 
 class ToolBought extends GameEvent {
   ToolBought(this.enhancement);

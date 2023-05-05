@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/game.dart';
+import '../office_enhancements/office_enhancements_page.dart';
+import '../publish_game/publish_game_page.dart';
 import 'game_bloc.dart';
 import 'game_events.dart';
 import 'game_states.dart';
@@ -23,6 +26,10 @@ class GamePage extends StatelessWidget {
           create: (BuildContext context) => GameBloc(game)),
       BlocProvider<NavigationBloc>(
           create: (BuildContext context) => NavigationBloc(game)),
+      BlocProvider<DeveloperBloc>(
+          create: (BuildContext context) => DeveloperBloc(game)),
+      BlocProvider<OfficeBloc>(
+          create: (BuildContext context) => OfficeBloc(game)),
     ], child: const GameWidget());
   }
 }
