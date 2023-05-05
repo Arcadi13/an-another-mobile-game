@@ -8,6 +8,7 @@ import '../game/game_bloc.dart';
 import '../game/game_events.dart';
 import '../navigation/navigation_bloc.dart';
 import '../office_enhancements/office_enhancements_page.dart';
+import '../upgrades_enhancements/upgrades_enhancements_page.dart';
 
 class GameEnhancementsWidget extends StatelessWidget {
   const GameEnhancementsWidget({super.key});
@@ -32,39 +33,13 @@ class GameEnhancementsWidget extends StatelessWidget {
                           ],
                           isScrollable: false,
                         ),
-                        SizedBox(
+                        const SizedBox(
                             height: 300,
                             child: TabBarView(
                               children: [
-                                const DeveloperEnhancementsWidget(),
-                                Center(
-                                    child: ListView.builder(
-                                        itemCount: state.enhancements.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return GestureDetector(
-                                            onTap: () => context
-                                                .read<GameBloc>()
-                                                .add(ToolBought(
-                                                    state.enhancements[index])),
-                                            child: Column(
-                                              children: [
-                                                const SizedBox(height: 10),
-                                                Text(state
-                                                    .enhancements[index].name
-                                                    .toString()),
-                                                const SizedBox(height: 5),
-                                                Text(state.enhancements[index]
-                                                    .description),
-                                                const SizedBox(height: 5),
-                                                Text(
-                                                    'Cost: ${state.enhancements[index].cost}\$'),
-                                                const SizedBox(height: 10),
-                                              ],
-                                            ),
-                                          );
-                                        })),
-                                const OfficeEnhancementsWidget()
+                                DeveloperEnhancementsWidget(),
+                                UpgradesEnhancementsWidget(),
+                                OfficeEnhancementsWidget()
                               ],
                             )),
                         IconButton(

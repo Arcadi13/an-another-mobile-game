@@ -1,8 +1,6 @@
-import 'package:an_another_mobile_game/src/domain/department.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../domain/developer.dart';
 import '../domain/game.dart';
 import '../domain/office.dart';
 
