@@ -4,11 +4,15 @@ import 'developer.dart';
 import 'office.dart';
 
 class Company {
+  Company() {
+    departments = [
+      Department(DeveloperType.fullstack),
+      Department(DeveloperType.artist),
+    ];
+  }
+
   late Office office;
-  late List<Department> departments = [
-    Department(DeveloperType.fullstack),
-    Department(DeveloperType.artist),
-  ];
+  late List<Department> departments;
 
   bool canDepartmentHire(DeveloperType developerType) {
     var department = _getDepartment(developerType);

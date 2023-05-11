@@ -1,12 +1,17 @@
+import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
+import 'package:an_another_mobile_game/src/upgrades_enhancements/upgrades_enhancements_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../company/game_career.dart';
 import '../domain/game.dart';
+import '../office_enhancements/office_enhancements_page.dart';
+import '../publish_game/publish_game_page.dart';
 import 'game_bloc.dart';
 import 'game_events.dart';
 import 'game_states.dart';
@@ -19,10 +24,17 @@ class GamePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-      BlocProvider<GameBloc>(
-          create: (BuildContext context) => GameBloc(game)),
+      BlocProvider<GameBloc>(create: (BuildContext context) => GameBloc(game)),
       BlocProvider<NavigationBloc>(
           create: (BuildContext context) => NavigationBloc(game)),
+      BlocProvider<DeveloperBloc>(
+          create: (BuildContext context) => DeveloperBloc(game)),
+      BlocProvider<OfficeBloc>(
+          create: (BuildContext context) => OfficeBloc(game)),
+      BlocProvider<UpgradesBloc>(
+          create: (BuildContext context) => UpgradesBloc(game)),
+      BlocProvider<SellCompanyBloc>(
+          create: (BuildContext context) => SellCompanyBloc(game)),
     ], child: const GameWidget());
   }
 }
@@ -80,7 +92,8 @@ class GameWidget extends StatelessWidget {
                     children: <Widget>[
                       GameStatsWidget(state: state),
                       const GameEnhancementsWidget(),
-                      const PublishGamesWidget()
+                      const PublishGamesWidget(),
+                      const CompanyWidget()
                     ],
                   ),
                 ),
@@ -103,6 +116,19 @@ class GameWidget extends StatelessWidget {
                           onPressed: () => context
                               .read<NavigationBloc>()
                               .add(OpenGamesEvent()),
+                        )),
+                    Positioned(
+                        top: 50,
+                        left: 50,
+                        child: FloatingActionButton(
+                          mini: true,
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Icon(Icons.account_balance),
+                          onPressed: () => context
+                              .read<NavigationBloc>()
+                              .add(OpenCompanyEvent()),
                         ))
                   ],
                 ));

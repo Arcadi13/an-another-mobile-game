@@ -18,16 +18,21 @@ class GameRecord {
     required this.enhancements,
   });
 
-  GameRecord.fromJson(Map<String, dynamic> json) : this (
-    money: json['money']! as int,
-    lines: json['lines']! as int,
-    incomingPerSecond: json['incomingPerSecond']! as int,
-    linesPerSecond: json['linesPerSecond']! as int,
-    games: List<GameItem>.from(json['games']!.map((game) => GameItem.fromJson(game))),
-    offices: List<Office>.from(json['offices']!.map((office) => Office.fromJson(office))),
-    developers: List<Developer>.from(json['developers']!.map((developer) => Developer.fromJson(developer))),
-    enhancements: List<Enhancement>.from(json['enhancements']!.map((enhancement) => Enhancement.fromJson(enhancement))),
-  );
+  GameRecord.fromJson(Map<String, dynamic> json)
+      : this(
+          money: json['money']! as int,
+          lines: json['lines']! as int,
+          incomingPerSecond: json['incomingPerSecond']! as int,
+          linesPerSecond: json['linesPerSecond']! as int,
+          games: List<GameItem>.from(
+              json['games']!.map((game) => GameItem.fromJson(game))),
+          offices: List<Office>.from(
+              json['offices']!.map((office) => Office.fromJson(office))),
+          developers: List<Developer>.from(json['developers']!
+              .map((developer) => Developer.fromJson(developer))),
+          enhancements: List<Enhancement>.from(json['enhancements']!
+              .map((enhancement) => Enhancement.fromJson(enhancement))),
+        );
 
   final int money;
   final int lines;
@@ -38,7 +43,7 @@ class GameRecord {
   final List<Developer> developers;
   final List<Enhancement> enhancements;
 
-  Map<String, Object?> toJson (){
+  Map<String, Object?> toJson() {
     return {
       'money': money,
       'lines': lines,
@@ -47,12 +52,11 @@ class GameRecord {
       'games': games.map((game) => game.toJson()).toList(),
     };
   }
-
 }
 
 class Game {
-// Game({required this.money, required this.lines, required this.incomingPerSecond, required this.linesPerSecond})
-  Game.fromRecord(GameRecord record){
+
+  Game.fromRecord(GameRecord record) {
     money = record.money;
     lines = record.lines;
     incomingPerSecond = record.incomingPerSecond;
@@ -61,9 +65,7 @@ class Game {
     offices = record.offices;
     developers = record.developers;
     enhancements = record.enhancements;
-  }
 
-  Game(){
     improveOffice(OfficeType.home);
   }
 
@@ -129,6 +131,24 @@ class Game {
     money -= office.cost;
     office.bought = true;
     company.updateOffice(office);
+  }
+
+  int companyValue() {
+    return incomingPerSecond * 10;
+  }
+
+  void sellCompany() {
+    money = 0;
+    lines = 0;
+    incomingPerSecond = 0;
+    linesPerSecond = 0;
+
+    for (Office office in offices) {
+      office.bought = false;
+    }
+
+    company = Company();
+    improveOffice(OfficeType.home);
   }
 
   void _calculateLinesPerSecond() {
