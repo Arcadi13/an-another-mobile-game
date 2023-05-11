@@ -4,8 +4,6 @@ import 'package:an_another_mobile_game/src/navigation/navigation_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../game/game_bloc.dart';
-import '../game/game_events.dart';
 import '../navigation/navigation_bloc.dart';
 import '../office_enhancements/office_enhancements_page.dart';
 import '../upgrades_enhancements/upgrades_enhancements_page.dart';

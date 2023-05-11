@@ -16,7 +16,7 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: (BlocBuilder<OfficeBloc, OfficeState>(builder: (context, state) {
+        child: BlocBuilder<OfficeBloc, OfficeState>(builder: (context, state) {
       return ListView.builder(
           itemCount: state.offices.length,
           itemBuilder: (BuildContext context, int index) {
@@ -28,7 +28,7 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
 
             return _getTile(context, office);
           });
-    })));
+    }));
   }
 
   GestureDetector _getTile(BuildContext context, Office office) {

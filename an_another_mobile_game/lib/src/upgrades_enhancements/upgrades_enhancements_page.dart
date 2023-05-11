@@ -16,19 +16,19 @@ class UpgradesEnhancementsWidgetState extends State<UpgradesEnhancementsWidget> 
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: (BlocBuilder<UpgradesBloc, UpgradesState>(builder: (context, state) {
+        child: BlocBuilder<UpgradesBloc, UpgradesState>(builder: (context, state) {
           return ListView.builder(
               itemCount: state.enhancements.length,
               itemBuilder: (BuildContext context, int index) {
                 var enhancement = state.enhancements[index];
 
-                // if (office.bought) {
-                //   return Container();
-                // }
+                if (enhancement.acquired) {
+                  return Container();
+                }
 
                 return _getTile(context, enhancement);
               });
-        })));
+        }));
   }
 
   GestureDetector _getTile(BuildContext context, Enhancement enhancement) {

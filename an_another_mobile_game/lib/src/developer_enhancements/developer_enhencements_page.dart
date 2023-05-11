@@ -18,7 +18,7 @@ class DeveloperEnhancementsWidgetState
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: (BlocBuilder<DeveloperBloc, DeveloperState>(
+        child: BlocBuilder<DeveloperBloc, DeveloperState>(
             builder: (context, state) {
       return ListView.builder(
           itemCount: state.developers.length,
@@ -31,7 +31,7 @@ class DeveloperEnhancementsWidgetState
 
             return _getTile(context, developer, department);
           });
-    })));
+    }));
   }
 
   GestureDetector _getTile(
