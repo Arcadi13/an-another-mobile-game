@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +43,7 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
           const SizedBox(height: 5),
           Text(office.description),
           const SizedBox(height: 5),
-          Text('Cost: ${office.cost}\$'),
+          Text('Cost: ${office.cost.formatCurrency()}'),
           const SizedBox(height: 10),
         ],
       ),

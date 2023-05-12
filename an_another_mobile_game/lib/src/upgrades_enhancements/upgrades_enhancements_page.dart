@@ -1,4 +1,5 @@
 import 'package:an_another_mobile_game/src/domain/enhancement.dart';
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -44,7 +45,7 @@ class UpgradesEnhancementsWidgetState extends State<UpgradesEnhancementsWidget> 
           Text(enhancement.description),
           const SizedBox(height: 5),
           Text(
-              'Cost: ${enhancement.cost}\$'),
+              'Cost: ${enhancement.cost.formatCurrency()}'),
           const SizedBox(height: 10),
         ],
       ),

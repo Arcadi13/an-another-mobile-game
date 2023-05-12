@@ -1,12 +1,12 @@
 import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
 import 'package:an_another_mobile_game/src/upgrades_enhancements/upgrades_enhancements_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../company/game_career.dart';
 import '../domain/game.dart';
@@ -51,19 +51,19 @@ class GameStatsWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '${state.money} \$',
+          state.money.formatCurrency(),
           style: theme.textTheme.displayMedium,
         ),
         Text(
-          '${state.incomePerSecond} \$ x sec',
+          '${state.incomePerSecond.formatCurrency()} x sec',
           style: theme.textTheme.bodySmall,
         ),
         Text(
-          '${state.lines} lines',
+          '${state.lines.formatNumber()} lines',
           style: theme.textTheme.displayMedium,
         ),
         Text(
-          '${state.linesPerSecond} lines x sec',
+          '${state.linesPerSecond.formatNumber()} lines x sec',
           style: theme.textTheme.bodySmall,
         ),
       ],

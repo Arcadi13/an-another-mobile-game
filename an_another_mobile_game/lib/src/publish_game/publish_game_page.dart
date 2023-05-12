@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -37,13 +38,13 @@ class PublishGamesWidget extends StatelessWidget {
                                       .bodyLarge),
                               const SizedBox(height: 5),
                               Text(
-                                  '+${state.games[index].income}\$ per second',
+                                  '+${state.games[index].income.formatCurrency()} per second',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium),
                               const SizedBox(height: 5),
                               Text(
-                                  'Cost: ${state.games[index].cost} lines',
+                                  'Cost: ${state.games[index].cost.formatNumber()} lines',
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium),

@@ -1,4 +1,5 @@
 import 'package:an_another_mobile_game/src/domain/department.dart';
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,7 +47,7 @@ class DeveloperEnhancementsWidgetState
           const SizedBox(height: 5),
           Text(developer.description),
           const SizedBox(height: 5),
-          Text('Cost: ${developer.cost}\$'),
+          Text('Cost: ${developer.cost.formatCurrency()}'),
           const SizedBox(height: 5),
           Text('${department.hired} of ${department.size} hired'),
           const SizedBox(height: 10),
