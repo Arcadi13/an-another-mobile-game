@@ -11,9 +11,3 @@ class GameStarted extends GameEvent {}
 class GameTicked extends GameEvent {}
 
 class GameTapped extends GameEvent {}
-
-class GamePublished extends GameEvent {
-  GamePublished(this.size);
-
-  final GameSize size;
-}

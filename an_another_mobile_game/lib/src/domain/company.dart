@@ -1,6 +1,7 @@
 import 'department.dart';
 import 'department_size.dart';
 import 'developer.dart';
+import 'game_item.dart';
 import 'office.dart';
 
 class Company {
@@ -13,6 +14,7 @@ class Company {
 
   late Office office;
   late List<Department> departments;
+  List<GameItem> publishedGames = [];
 
   bool canDepartmentHire(DeveloperType developerType) {
     var department = _getDepartment(developerType);
@@ -45,6 +47,8 @@ class Company {
     }
     this.office = office;
   }
+
+  void publishGame(GameItem game) => publishedGames.add(game);
 
   Department? _getDepartment(DeveloperType developerType) {
     if (!departments

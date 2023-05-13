@@ -35,6 +35,8 @@ class GamePage extends StatelessWidget {
           create: (BuildContext context) => UpgradesBloc(game)),
       BlocProvider<SellCompanyBloc>(
           create: (BuildContext context) => SellCompanyBloc(game)),
+      BlocProvider<PublishGameBloc>(
+          create: (BuildContext context) => PublishGameBloc(game)),
     ], child: const GameWidget());
   }
 }
@@ -92,7 +94,7 @@ class GameWidget extends StatelessWidget {
                     children: <Widget>[
                       GameStatsWidget(state: state),
                       const GameEnhancementsWidget(),
-                      const PublishGamesWidget(),
+                      const PublishGamesDialogWidget(),
                       const CompanyWidget()
                     ],
                   ),

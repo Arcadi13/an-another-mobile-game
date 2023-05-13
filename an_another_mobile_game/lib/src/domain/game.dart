@@ -55,7 +55,6 @@ class GameRecord {
 }
 
 class Game {
-
   Game.fromRecord(GameRecord record) {
     money = record.money;
     lines = record.lines;
@@ -95,11 +94,8 @@ class Game {
     if (lines < game.cost) return;
 
     lines -= game.cost;
-    incomingPerSecond += game.income;
-  }
-
-  GameItem _getGame(GameSize size) {
-    return games.firstWhere((element) => element.size == size);
+    company.publishGame(game);
+    _calculateIncomingPerSecond();
   }
 
   void hireDeveloper(DeveloperType developerType) {
@@ -119,7 +115,7 @@ class Game {
 
     money -= enhancement.cost;
     enhancement.enhancementAcquired();
-    if(enhancement.developerType != null){
+    if (enhancement.developerType != null) {
       company.increaseDepartmentProductivity(
           enhancement.developerType!, enhancement.multiplier);
     }
@@ -162,7 +158,21 @@ class Game {
 
     var genericEnhancementsMultiplier = _getGenericEnhancementsMultiplier();
 
-    linesPerSecond = (departmentsProductivity * genericEnhancementsMultiplier).round();
+    linesPerSecond =
+        (departmentsProductivity * genericEnhancementsMultiplier).round();
+  }
+
+  void _calculateIncomingPerSecond() {
+    var incoming = 0;
+    for (GameItem game in company.publishedGames) {
+      incoming += game.income;
+    }
+
+    incomingPerSecond = incoming;
+  }
+
+  GameItem _getGame(GameSize size) {
+    return games.firstWhere((element) => element.size == size);
   }
 
   _incomePerSecond() {
@@ -173,8 +183,8 @@ class Game {
   double _getGenericEnhancementsMultiplier() {
     var multiplier = 1.0;
 
-    for (Enhancement enhancement in enhancements){
-      if(enhancement.developerType != null || !enhancement.acquired) continue;
+    for (Enhancement enhancement in enhancements) {
+      if (enhancement.developerType != null || !enhancement.acquired) continue;
 
       multiplier *= enhancement.multiplier;
     }

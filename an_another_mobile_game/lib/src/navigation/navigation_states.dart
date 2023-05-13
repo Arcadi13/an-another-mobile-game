@@ -7,11 +7,7 @@ abstract class NavigationState {}
 
 class OpenEnhancementsState extends NavigationState {}
 
-class OpenGamesState extends NavigationState {
-  OpenGamesState(this.games);
-
-  final List<GameItem> games;
-}
+class OpenGamesState extends NavigationState {}
 
 class OpenCompanyState extends NavigationState {}
 
