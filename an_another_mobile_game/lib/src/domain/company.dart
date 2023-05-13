@@ -30,11 +30,11 @@ class Company {
     var department = _getDepartment(developerType);
     if (department == null) return 0;
 
-    return department.hired * department.productivityMultiplier;
+    return (department.hired * department.productivityMultiplier).round();
   }
 
   void increaseDepartmentProductivity(
-      DeveloperType developerType, int multiplier) {
+      DeveloperType developerType, double multiplier) {
     var department = _getDepartment(developerType);
     department?.productivityIncreased(multiplier);
   }

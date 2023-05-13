@@ -10,14 +10,14 @@ class Enhancement {
 
   Enhancement.fromJson(Map<String, Object?> json):this(
     developerType: _developerTypeFromString(json['developerType']! as String),
-    multiplier: json['multiplier']! as int,
+    multiplier: double.parse(json['multiplier']!.toString()),
     cost: json['cost']! as int,
     name: json['name']! as String,
     description: json['description']! as String,
   );
 
-  final DeveloperType developerType;
-  final int multiplier;
+  final DeveloperType? developerType;
+  final double multiplier;
   final int cost;
   final String name;
   final String description;
@@ -26,7 +26,9 @@ class Enhancement {
 
   void enhancementAcquired() => acquired = true;
 
-  static DeveloperType _developerTypeFromString(String size) {
+  static DeveloperType? _developerTypeFromString(String size) {
+    if(size == 'none') return null;
+
     return DeveloperType.values.firstWhere((e) =>
     e.toString().toLowerCase().split('.').last == size.toLowerCase());
   }

@@ -119,8 +119,10 @@ class Game {
 
     money -= enhancement.cost;
     enhancement.enhancementAcquired();
-    company.increaseDepartmentProductivity(
-        DeveloperType.fullstack, enhancement.multiplier);
+    if(enhancement.developerType != null){
+      company.increaseDepartmentProductivity(
+          enhancement.developerType!, enhancement.multiplier);
+    }
     _calculateLinesPerSecond();
   }
 
@@ -152,17 +154,31 @@ class Game {
   }
 
   void _calculateLinesPerSecond() {
-    var x = 0;
+    var departmentsProductivity = 0;
     for (Developer developer in developers) {
-      x += developer.productivity *
+      departmentsProductivity += developer.productivity *
           company.getDepartmentProductivity(developer.type);
     }
 
-    linesPerSecond = x;
+    var genericEnhancementsMultiplier = _getGenericEnhancementsMultiplier();
+
+    linesPerSecond = (departmentsProductivity * genericEnhancementsMultiplier).round();
   }
 
   _incomePerSecond() {
     money += incomingPerSecond;
     lines += linesPerSecond;
+  }
+
+  double _getGenericEnhancementsMultiplier() {
+    var multiplier = 1.0;
+
+    for (Enhancement enhancement in enhancements){
+      if(enhancement.developerType != null || !enhancement.acquired) continue;
+
+      multiplier *= enhancement.multiplier;
+    }
+
+    return multiplier;
   }
 }
