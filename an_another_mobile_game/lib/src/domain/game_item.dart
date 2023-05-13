@@ -1,4 +1,4 @@
-enum GameSize { tiny, small, medium, large, aaa }
+enum GameSize { mod, tiny, small, medium, large, aaa, gtavi }
 
 // TODO find better naming
 class GameItem {

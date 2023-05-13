@@ -65,6 +65,9 @@ class PublishGameBloc extends Bloc<PublishGameEvent, PublishGameState> {
       game.publishGame(event.size);
       emit(PublishGameState(game.games, game.company.publishedGames));
     });
+
+    on<UpdatePublishedGames>((event, emit) =>
+        emit(PublishGameState(game.games, game.company.publishedGames)));
   }
 }
 
@@ -85,6 +88,8 @@ class GamePublished extends PublishGameEvent {
 
   final GameSize size;
 }
+
+class UpdatePublishedGames extends PublishGameEvent {}
 
 class PublishGamesDialogWidget extends StatelessWidget {
   const PublishGamesDialogWidget({super.key});

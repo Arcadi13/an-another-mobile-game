@@ -19,9 +19,8 @@ class DeveloperEnhancementsWidgetState
     extends State<DeveloperEnhancementsWidget> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: BlocBuilder<DeveloperBloc, DeveloperState>(
-            builder: (context, state) {
+    return Center(child:
+        BlocBuilder<DeveloperBloc, DeveloperState>(builder: (context, state) {
       return ListView.builder(
           itemCount: state.developers.length,
           itemBuilder: (BuildContext context, int index) {
@@ -46,11 +45,19 @@ class DeveloperEnhancementsWidgetState
           const SizedBox(height: 10),
           Text(TranslationsManager().getTranslation(developer.title)),
           const SizedBox(height: 5),
-          Text(TranslationsManager().getTranslation(developer.description)),
+          Text(TranslationsManager()
+              .getTranslation(developer.description)
+              .format([
+            (developer.productivity * department.productivityMultiplier)
+                .toString()
+          ])),
           const SizedBox(height: 5),
-          Text('Cost: ${developer.cost.formatCurrency()}'),
+          Text(TranslationsManager()
+              .getTranslation('costLabel')
+              .format([developer.cost.formatCurrency()])),
           const SizedBox(height: 5),
-          Text('${department.hired} of ${department.size} hired'),
+          Text(TranslationsManager().getTranslation('developerHiredOf').format(
+              [department.hired.toString(), department.size.toString()])),
           const SizedBox(height: 10),
         ],
       ),
@@ -61,11 +68,12 @@ class DeveloperEnhancementsWidgetState
 class DeveloperBloc extends Bloc<DeveloperEvent, DeveloperState> {
   DeveloperBloc(Game game)
       : super(DeveloperState(game.developers, game.company.departments)) {
-
     on<DeveloperHired>((event, emit) {
       game.hireDeveloper(event.developerType);
       emit(DeveloperState(game.developers, game.company.departments));
     });
+
+    on<UpdateDevelopers>((event, emit) => emit(DeveloperState(game.developers, game.company.departments)));
   }
 }
 
@@ -86,3 +94,5 @@ class DeveloperHired extends DeveloperEvent {
 
   final DeveloperType developerType;
 }
+
+class UpdateDevelopers extends DeveloperEvent{}

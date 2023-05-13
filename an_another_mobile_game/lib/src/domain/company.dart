@@ -13,7 +13,7 @@ class Company {
   }
 
   late Office office;
-  late List<Department> departments;
+  List<Department> departments = [];
   List<GameItem> publishedGames = [];
 
   bool canDepartmentHire(DeveloperType developerType) {

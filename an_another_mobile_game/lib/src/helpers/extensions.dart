@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-extension FormatCurrency on int {
+extension IntExtensions on int {
   String formatCurrency() {
     return NumberFormat.compactCurrency(symbol: '\$', decimalDigits: 1)
         .format(this);
@@ -8,5 +8,17 @@ extension FormatCurrency on int {
 
   String formatNumber() {
     return NumberFormat.compact().format(this);
+  }
+}
+
+extension StringExtensions on String {
+  String format(List<String> parameters) {
+    String result = this;
+
+    for (int i = 0; i < parameters.length; i++) {
+      result = result.replaceAll('{$i}', parameters[i]);
+    }
+
+    return result;
   }
 }

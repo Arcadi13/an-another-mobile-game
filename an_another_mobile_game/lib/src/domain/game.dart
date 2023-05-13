@@ -74,8 +74,10 @@ class Game {
   int linesPerSecond = 0;
   List<GameItem> games = [];
   List<Office> offices = [];
+  List<OfficeType> boughtOffices = [];
   List<Developer> developers = [];
   List<Enhancement> enhancements = [];
+  List<Enhancement> acquiredEnhancements = [];
   Company company = Company();
 
   Stream<Game> tick() {
@@ -111,11 +113,13 @@ class Game {
   }
 
   void toolBought(Enhancement enhancement) {
-    if (money < enhancement.cost || enhancement.acquired) return;
+    if (money < enhancement.cost || acquiredEnhancements.contains(enhancement)) {
+      return;
+    }
 
     money -= enhancement.cost;
-    enhancement.enhancementAcquired();
-    if (enhancement.developerType != null) {
+    acquiredEnhancements.add(enhancement);
+    if (enhancement.type == EnhancementType.developer) {
       company.increaseDepartmentProductivity(
           enhancement.developerType!, enhancement.multiplier);
     }
@@ -124,10 +128,10 @@ class Game {
 
   void improveOffice(OfficeType type) {
     var office = offices.firstWhere((element) => element.type == type);
-    if (office.bought || money < office.cost) return;
+    if (boughtOffices.contains(type) || money < office.cost) return;
 
     money -= office.cost;
-    office.bought = true;
+    boughtOffices.add(type);
     company.updateOffice(office);
   }
 
@@ -141,9 +145,8 @@ class Game {
     incomingPerSecond = 0;
     linesPerSecond = 0;
 
-    for (Office office in offices) {
-      office.bought = false;
-    }
+    boughtOffices.removeRange(0, boughtOffices.length);
+    acquiredEnhancements.removeRange(0, acquiredEnhancements.length);
 
     company = Company();
     improveOffice(OfficeType.home);
@@ -184,7 +187,10 @@ class Game {
     var multiplier = 1.0;
 
     for (Enhancement enhancement in enhancements) {
-      if (enhancement.developerType != null || !enhancement.acquired) continue;
+      if (enhancement.type != EnhancementType.generic ||
+          !acquiredEnhancements.contains(enhancement)) {
+        continue;
+      }
 
       multiplier *= enhancement.multiplier;
     }

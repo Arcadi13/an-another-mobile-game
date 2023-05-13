@@ -23,7 +23,7 @@ class UpgradesEnhancementsWidgetState extends State<UpgradesEnhancementsWidget> 
               itemBuilder: (BuildContext context, int index) {
                 var enhancement = state.enhancements[index];
 
-                if (enhancement.acquired) {
+                if (state.enhancementAcquired(enhancement)) {
                   return Container();
                 }
 
@@ -54,18 +54,21 @@ class UpgradesEnhancementsWidgetState extends State<UpgradesEnhancementsWidget> 
 }
 
 class UpgradesBloc extends Bloc<UpgradesEvent, UpgradesState> {
-  UpgradesBloc(Game game) : super(UpgradesState(game.enhancements)){
+  UpgradesBloc(Game game) : super(UpgradesState(game.enhancements, game.acquiredEnhancements)){
     on<ToolBought>((event, emit) {
       game.toolBought(event.enhancement);
-      emit(UpgradesState(game.enhancements));
+      emit(UpgradesState(game.enhancements, game.acquiredEnhancements));
     });
   }
 }
 
 class UpgradesState {
-  UpgradesState(this.enhancements);
+  UpgradesState(this.enhancements, this.acquiredEnhancements);
 
   final List<Enhancement> enhancements;
+  final List<Enhancement> acquiredEnhancements;
+
+  bool enhancementAcquired(Enhancement enhancement) => acquiredEnhancements.contains(enhancement);
 }
 
 abstract class UpgradesEvent {}
