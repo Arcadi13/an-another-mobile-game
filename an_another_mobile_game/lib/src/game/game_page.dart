@@ -1,3 +1,5 @@
+import 'package:an_another_mobile_game/src/audio/audio_controller.dart';
+import 'package:an_another_mobile_game/src/audio/sounds.dart';
 import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
 import 'package:an_another_mobile_game/src/helpers/extensions.dart';
@@ -136,6 +138,9 @@ class GameWidget extends StatelessWidget {
                 ));
           },
         ),
-        onTap: () => context.read<GameBloc>().add(GameTapped()));
+        onTap: () {
+          context.read<GameBloc>().add(GameTapped());
+          AudioController().playSfx(SfxType.typing);
+        });
   }
 }

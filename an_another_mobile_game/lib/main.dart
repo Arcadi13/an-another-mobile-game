@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:an_another_mobile_game/src/audio/audio_controller.dart';
 import 'package:an_another_mobile_game/src/domain/game.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'firebase_config.dart';
 import 'src/game/game_bloc.dart';
 import 'src/game/game_page.dart';
-import 'src/managers/translations_manager.dart';
+import 'src/translations/translations_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initFirebase();
-  await TranslationsManager().init(window.locale.toLanguageTag());
+  await TranslationsController().init(window.locale.toLanguageTag());
+  await AudioController().initialize();
 
   GameRecord record = await _getGame();
 

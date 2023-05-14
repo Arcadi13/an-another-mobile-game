@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/developer.dart';
 import '../domain/game.dart';
-import '../managers/translations_manager.dart';
+import '../translations/translations_controller.dart';
 
 class DeveloperEnhancementsWidget extends StatefulWidget {
   const DeveloperEnhancementsWidget({super.key});
@@ -43,20 +43,20 @@ class DeveloperEnhancementsWidgetState
       child: Column(
         children: [
           const SizedBox(height: 10),
-          Text(TranslationsManager().getTranslation(developer.title)),
+          Text(TranslationsController().getTranslation(developer.title)),
           const SizedBox(height: 5),
-          Text(TranslationsManager()
+          Text(TranslationsController()
               .getTranslation(developer.description)
               .format([
             (developer.productivity * department.productivityMultiplier)
                 .toString()
           ])),
           const SizedBox(height: 5),
-          Text(TranslationsManager()
+          Text(TranslationsController()
               .getTranslation('costLabel')
               .format([developer.cost.formatCurrency()])),
           const SizedBox(height: 5),
-          Text(TranslationsManager().getTranslation('developerHiredOf').format(
+          Text(TranslationsController().getTranslation('developerHiredOf').format(
               [department.hired.toString(), department.size.toString()])),
           const SizedBox(height: 10),
         ],
