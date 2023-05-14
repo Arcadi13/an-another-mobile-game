@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
+import 'package:an_another_mobile_game/src/publish_game/publish_game_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -85,8 +86,11 @@ class SellCompanyWidget extends StatelessWidget {
           children: [
             Text('You can sell your company and get ${state.getValue()} stocks'),
             FilledButton(
-                onPressed: () =>
-                    context.read<SellCompanyBloc>().add(SellCompanyEvent()),
+                onPressed: () {
+                  context.read<SellCompanyBloc>().add(SellCompanyEvent());
+                  context.read<DeveloperBloc>().add(UpdateDevelopers());
+                  context.read<PublishGameBloc>().add(UpdatePublishedGames());
+                },
                 child: const Text('Sell'))
           ],
         ),

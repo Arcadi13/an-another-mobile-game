@@ -55,7 +55,6 @@ class GameRecord {
 }
 
 class Game {
-
   Game.fromRecord(GameRecord record) {
     money = record.money;
     lines = record.lines;
@@ -75,8 +74,10 @@ class Game {
   int linesPerSecond = 0;
   List<GameItem> games = [];
   List<Office> offices = [];
+  List<OfficeType> boughtOffices = [];
   List<Developer> developers = [];
   List<Enhancement> enhancements = [];
+  List<Enhancement> acquiredEnhancements = [];
   Company company = Company();
 
   Stream<Game> tick() {
@@ -95,11 +96,8 @@ class Game {
     if (lines < game.cost) return;
 
     lines -= game.cost;
-    incomingPerSecond += game.income;
-  }
-
-  GameItem _getGame(GameSize size) {
-    return games.firstWhere((element) => element.size == size);
+    company.publishGame(game);
+    _calculateIncomingPerSecond();
   }
 
   void hireDeveloper(DeveloperType developerType) {
@@ -115,21 +113,25 @@ class Game {
   }
 
   void toolBought(Enhancement enhancement) {
-    if (money < enhancement.cost || enhancement.acquired) return;
+    if (money < enhancement.cost || acquiredEnhancements.contains(enhancement)) {
+      return;
+    }
 
     money -= enhancement.cost;
-    enhancement.enhancementAcquired();
-    company.increaseDepartmentProductivity(
-        DeveloperType.fullstack, enhancement.multiplier);
+    acquiredEnhancements.add(enhancement);
+    if (enhancement.type == EnhancementType.developer) {
+      company.increaseDepartmentProductivity(
+          enhancement.developerType!, enhancement.multiplier);
+    }
     _calculateLinesPerSecond();
   }
 
   void improveOffice(OfficeType type) {
     var office = offices.firstWhere((element) => element.type == type);
-    if (office.bought || money < office.cost) return;
+    if (boughtOffices.contains(type) || money < office.cost) return;
 
     money -= office.cost;
-    office.bought = true;
+    boughtOffices.add(type);
     company.updateOffice(office);
   }
 
@@ -143,26 +145,56 @@ class Game {
     incomingPerSecond = 0;
     linesPerSecond = 0;
 
-    for (Office office in offices) {
-      office.bought = false;
-    }
+    boughtOffices.removeRange(0, boughtOffices.length);
+    acquiredEnhancements.removeRange(0, acquiredEnhancements.length);
 
     company = Company();
     improveOffice(OfficeType.home);
   }
 
   void _calculateLinesPerSecond() {
-    var x = 0;
+    var departmentsProductivity = 0;
     for (Developer developer in developers) {
-      x += developer.productivity *
+      departmentsProductivity += developer.productivity *
           company.getDepartmentProductivity(developer.type);
     }
 
-    linesPerSecond = x;
+    var genericEnhancementsMultiplier = _getGenericEnhancementsMultiplier();
+
+    linesPerSecond =
+        (departmentsProductivity * genericEnhancementsMultiplier).round();
+  }
+
+  void _calculateIncomingPerSecond() {
+    var incoming = 0;
+    for (GameItem game in company.publishedGames) {
+      incoming += game.income;
+    }
+
+    incomingPerSecond = incoming;
+  }
+
+  GameItem _getGame(GameSize size) {
+    return games.firstWhere((element) => element.size == size);
   }
 
   _incomePerSecond() {
     money += incomingPerSecond;
     lines += linesPerSecond;
+  }
+
+  double _getGenericEnhancementsMultiplier() {
+    var multiplier = 1.0;
+
+    for (Enhancement enhancement in enhancements) {
+      if (enhancement.type != EnhancementType.generic ||
+          !acquiredEnhancements.contains(enhancement)) {
+        continue;
+      }
+
+      multiplier *= enhancement.multiplier;
+    }
+
+    return multiplier;
   }
 }

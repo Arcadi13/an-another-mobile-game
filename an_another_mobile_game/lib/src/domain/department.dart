@@ -7,11 +7,11 @@ class Department {
 
   int size = 0;
   int hired = 0;
-  int productivityMultiplier = 1;
+  double productivityMultiplier = 1;
 
   void hireDeveloper() => hired++;
 
-  void productivityIncreased(int multiplier) => productivityMultiplier *= multiplier;
+  void productivityIncreased(double multiplier) => productivityMultiplier *= multiplier;
 
   void expandSize(int newSize) => size = newSize;
 }

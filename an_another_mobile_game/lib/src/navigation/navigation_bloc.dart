@@ -9,7 +9,7 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
     on<OpenEnhancementsEvent>((event, emit) =>
         emit(OpenEnhancementsState()));
 
-    on<OpenGamesEvent>((event, emit) => emit(OpenGamesState(game.games)));
+    on<OpenGamesEvent>((event, emit) => emit(OpenGamesState()));
 
     on<OpenCompanyEvent>((event, emit) => emit(OpenCompanyState()));
 

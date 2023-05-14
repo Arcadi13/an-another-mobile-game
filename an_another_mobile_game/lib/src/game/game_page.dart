@@ -1,12 +1,14 @@
+import 'package:an_another_mobile_game/src/audio/audio_controller.dart';
+import 'package:an_another_mobile_game/src/audio/sounds.dart';
 import 'package:an_another_mobile_game/src/developer_enhancements/developer_enhencements_page.dart';
 import 'package:an_another_mobile_game/src/game_enhancements/game_enhancements_page.dart';
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
 import 'package:an_another_mobile_game/src/upgrades_enhancements/upgrades_enhancements_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../company/game_career.dart';
 import '../domain/game.dart';
@@ -35,6 +37,8 @@ class GamePage extends StatelessWidget {
           create: (BuildContext context) => UpgradesBloc(game)),
       BlocProvider<SellCompanyBloc>(
           create: (BuildContext context) => SellCompanyBloc(game)),
+      BlocProvider<PublishGameBloc>(
+          create: (BuildContext context) => PublishGameBloc(game)),
     ], child: const GameWidget());
   }
 }
@@ -51,19 +55,19 @@ class GameStatsWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          '${state.money} \$',
+          state.money.formatCurrency(),
           style: theme.textTheme.displayMedium,
         ),
         Text(
-          '${state.incomePerSecond} \$ x sec',
+          '${state.incomePerSecond.formatCurrency()} x sec',
           style: theme.textTheme.bodySmall,
         ),
         Text(
-          '${state.lines} lines',
+          '${state.lines.formatNumber()} lines',
           style: theme.textTheme.displayMedium,
         ),
         Text(
-          '${state.linesPerSecond} lines x sec',
+          '${state.linesPerSecond.formatNumber()} lines x sec',
           style: theme.textTheme.bodySmall,
         ),
       ],
@@ -92,7 +96,7 @@ class GameWidget extends StatelessWidget {
                     children: <Widget>[
                       GameStatsWidget(state: state),
                       const GameEnhancementsWidget(),
-                      const PublishGamesWidget(),
+                      const PublishGamesDialogWidget(),
                       const CompanyWidget()
                     ],
                   ),
@@ -134,6 +138,9 @@ class GameWidget extends StatelessWidget {
                 ));
           },
         ),
-        onTap: () => context.read<GameBloc>().add(GameTapped()));
+        onTap: () {
+          context.read<GameBloc>().add(GameTapped());
+          AudioController().playSfx(SfxType.typing);
+        });
   }
 }

@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/helpers/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +23,7 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
           itemBuilder: (BuildContext context, int index) {
             var office = state.offices[index];
 
-            if (office.bought) {
+            if (state.officeBought(office.type)) {
               return Container();
             }
 
@@ -42,7 +43,7 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
           const SizedBox(height: 5),
           Text(office.description),
           const SizedBox(height: 5),
-          Text('Cost: ${office.cost}\$'),
+          Text('Cost: ${office.cost.formatCurrency()}'),
           const SizedBox(height: 10),
         ],
       ),
@@ -51,18 +52,21 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
 }
 
 class OfficeBloc extends Bloc<OfficeEvent, OfficeState> {
-  OfficeBloc(Game game) : super(OfficeState(game.offices)) {
+  OfficeBloc(Game game) : super(OfficeState(game.offices, game.boughtOffices)) {
     on<OfficeImprovement>((event, emit) {
       game.improveOffice(event.officeType);
-      emit(OfficeState(game.offices));
+      emit(OfficeState(game.offices, game.boughtOffices));
     });
   }
 }
 
 class OfficeState {
-  OfficeState(this.offices);
+  OfficeState(this.offices, this.boughtOffices);
 
   final List<Office> offices;
+  final List<OfficeType> boughtOffices;
+
+  bool officeBought(OfficeType type) => boughtOffices.contains(type);
 }
 
 abstract class OfficeEvent {}

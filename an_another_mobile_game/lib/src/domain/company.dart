@@ -1,6 +1,7 @@
 import 'department.dart';
 import 'department_size.dart';
 import 'developer.dart';
+import 'game_item.dart';
 import 'office.dart';
 
 class Company {
@@ -12,7 +13,8 @@ class Company {
   }
 
   late Office office;
-  late List<Department> departments;
+  List<Department> departments = [];
+  List<GameItem> publishedGames = [];
 
   bool canDepartmentHire(DeveloperType developerType) {
     var department = _getDepartment(developerType);
@@ -30,11 +32,11 @@ class Company {
     var department = _getDepartment(developerType);
     if (department == null) return 0;
 
-    return department.hired * department.productivityMultiplier;
+    return (department.hired * department.productivityMultiplier).round();
   }
 
   void increaseDepartmentProductivity(
-      DeveloperType developerType, int multiplier) {
+      DeveloperType developerType, double multiplier) {
     var department = _getDepartment(developerType);
     department?.productivityIncreased(multiplier);
   }
@@ -45,6 +47,8 @@ class Company {
     }
     this.office = office;
   }
+
+  void publishGame(GameItem game) => publishedGames.add(game);
 
   Department? _getDepartment(DeveloperType developerType) {
     if (!departments

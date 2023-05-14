@@ -18,9 +18,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<GameTicked>((event, emit) => emit(state.update(game)));
 
     on<GameTapped>((event, emit) => game.writeLine());
-
-    on<GamePublished>((event, emit) => game.publishGame(event.size));
-
+    
     add(GameStarted());
   }
 }

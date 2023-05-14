@@ -26,8 +26,6 @@ class Office {
   final String description;
   final List<DepartmentSize> departmentSizes;
 
-  bool bought = false;
-
   static OfficeType _officeTypeFromString(String type) {
     return OfficeType.values.firstWhere((e) =>
         e.toString().toLowerCase().split('.').last == type.toLowerCase());
