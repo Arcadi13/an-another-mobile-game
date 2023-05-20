@@ -9,6 +9,18 @@ class Company {
     departments = [
       Department(DeveloperType.fullstack),
       Department(DeveloperType.artist),
+      Department(DeveloperType.uiDesigner),
+      Department(DeveloperType.gameArtist),
+      Department(DeveloperType.animator),
+      Department(DeveloperType.programmer),
+      Department(DeveloperType.gameDesigner),
+      Department(DeveloperType.soundEngineer),
+      Department(DeveloperType.creativeDirector),
+      Department(DeveloperType.marketing),
+      Department(DeveloperType.systemDesigner),
+      Department(DeveloperType.toolDesigner),
+      Department(DeveloperType.vfxArtist),
+      Department(DeveloperType.levelDesigner),
     ];
   }
 

@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 
 import '../company/game_career.dart';
 import '../domain/game.dart';
+import '../navigation/navigation_states.dart';
 import '../office_enhancements/office_enhancements_page.dart';
 import '../publish_game/publish_game_page.dart';
 import 'game_bloc.dart';
@@ -80,16 +81,16 @@ class GameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: BlocBuilder<GameBloc, GameState>(
-          builder: (context, state) {
-            return Scaffold(
+    return BlocBuilder<GameBloc, GameState>(
+      builder: (context, state) {
+        return GestureDetector(
+            child: Scaffold(
                 body: Container(
                   width: double.infinity,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: Colors.blue,
                       image: DecorationImage(
-                          image: AssetImage("assets/images/placeholder.jpg"),
+                          image: AssetImage(state.imagePath),
                           fit: BoxFit.fitHeight)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -135,12 +136,14 @@ class GameWidget extends StatelessWidget {
                               .add(OpenCompanyEvent()),
                         ))
                   ],
-                ));
-          },
-        ),
-        onTap: () {
-          context.read<GameBloc>().add(GameTapped());
-          AudioController().playSfx(SfxType.typing);
-        });
+                )),
+            onTap: () {
+              if (context.read<NavigationBloc>().state is ClosedDialogsState) {
+                context.read<GameBloc>().add(GameTapped());
+                AudioController().playSfx(SfxType.typing);
+              }
+            });
+      },
+    );
   }
 }

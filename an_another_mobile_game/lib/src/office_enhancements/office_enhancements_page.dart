@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/game.dart';
 import '../domain/office.dart';
+import '../translations/translations_controller.dart';
 
 class OfficeEnhancementsWidget extends StatefulWidget {
   const OfficeEnhancementsWidget({super.key});
@@ -39,11 +40,13 @@ class OfficeEnhancementsWidgetState extends State<OfficeEnhancementsWidget> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          Text(office.title),
+          Text(TranslationsController().getTranslation(office.title)),
           const SizedBox(height: 5),
-          Text(office.description),
+          Text(TranslationsController().getTranslation(office.description), textAlign: TextAlign.center),
           const SizedBox(height: 5),
-          Text('Cost: ${office.cost.formatCurrency()}'),
+          Text(TranslationsController()
+              .getTranslation('costLabel')
+              .format([office.cost.formatCurrency()])),
           const SizedBox(height: 10),
         ],
       ),
