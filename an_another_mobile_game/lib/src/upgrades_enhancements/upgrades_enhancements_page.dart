@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/game.dart';
+import '../translations/translations_controller.dart';
 
 class UpgradesEnhancementsWidget extends StatefulWidget {
   const UpgradesEnhancementsWidget({super.key});
@@ -39,13 +40,16 @@ class UpgradesEnhancementsWidgetState extends State<UpgradesEnhancementsWidget> 
       child: Column(
         children: [
           const SizedBox(height: 10),
-          Text(enhancement.name
+          Text(TranslationsController()
+              .getTranslation(enhancement.name)
               .toString()),
           const SizedBox(height: 5),
-          Text(enhancement.description),
+          Text(TranslationsController()
+              .getTranslation(enhancement.description)),
           const SizedBox(height: 5),
-          Text(
-              'Cost: ${enhancement.cost.formatCurrency()}'),
+          Text(TranslationsController()
+              .getTranslation('costLabel')
+              .format([enhancement.cost.formatCurrency()])),
           const SizedBox(height: 10),
         ],
       ),
