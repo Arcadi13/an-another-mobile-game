@@ -9,6 +9,7 @@ import '../game/game_events.dart';
 import '../navigation/navigation_bloc.dart';
 import '../navigation/navigation_events.dart';
 import '../navigation/navigation_states.dart';
+import '../translations/translations_controller.dart';
 
 class PublishGameWidget extends StatefulWidget {
   const PublishGameWidget({super.key});
@@ -37,7 +38,8 @@ class PublishGameWidgetState extends State<PublishGameWidget> {
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
-                    Text(game.title,
+                    Text(TranslationsController()
+                        .getTranslation(game.title),
                         style: Theme.of(context).textTheme.bodyLarge),
                     const SizedBox(height: 5),
                     Text('+${game.income.formatCurrency()} per second',

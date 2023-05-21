@@ -65,6 +65,8 @@ class Game {
     developers = record.developers;
     enhancements = record.enhancements;
 
+    games.sort((a, b) => a.cost.compareTo(b.cost));
+    enhancements.sort((a,b)=> a.cost.compareTo(b.cost));
     improveOffice(OfficeType.home);
   }
 
@@ -72,6 +74,7 @@ class Game {
   int lines = 0;
   int incomingPerSecond = 0;
   int linesPerSecond = 0;
+  double playerProductivity = 1;
   List<GameItem> games = [];
   List<Office> offices = [];
   List<OfficeType> boughtOffices = [];
@@ -88,7 +91,7 @@ class Game {
       Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
 
   void writeLine() {
-    lines++;
+    lines += playerProductivity.round();
   }
 
   void publishGame(GameSize gameSize) {
@@ -122,6 +125,11 @@ class Game {
     if (enhancement.type == EnhancementType.developer) {
       company.increaseDepartmentProductivity(
           enhancement.developerType!, enhancement.multiplier);
+    }
+
+    if(enhancement.type == EnhancementType.player){
+      playerProductivity *= enhancement.multiplier;
+      return;
     }
     _calculateLinesPerSecond();
   }
