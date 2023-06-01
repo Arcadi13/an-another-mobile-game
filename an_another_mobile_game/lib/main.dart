@@ -25,13 +25,13 @@ void main() async {
 
 Future<GameRecord> _getGame() async {
   final gameRef = FirebaseFirestore.instance
-      .collection('games')
+      .collection('users')
       .withConverter<GameRecord>(
           fromFirestore: (snapshot, _) => GameRecord.fromJson(snapshot.data()!),
           toFirestore: (game, _) => game.toJson());
 
   GameRecord record =
-      await gameRef.doc('default').get().then((value) => value.data()!);
+      await gameRef.doc('test').get().then((value) => value.data()!);
   return record;
 }
 

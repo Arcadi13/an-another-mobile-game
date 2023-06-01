@@ -20,6 +20,16 @@ class Office {
               json['departmentSizes'].map((e) => DepartmentSize.fromJson(e))),
         );
 
+  Map<String, Object?> toJson (){
+    return {
+      'type': _stringFromOfficeType(type),
+      'cost': cost,
+      'title': title,
+      'description': description,
+      'departmentSizes': departmentSizes.map((departmentSize) => departmentSize.toJson()).toList(),
+    };
+  }
+
   final int cost;
   final OfficeType type;
   final String title;
@@ -31,7 +41,7 @@ class Office {
         e.toString().toLowerCase().split('.').last == type.toLowerCase());
   }
 
-  static String _stringFromOfficeType(OfficeType size) {
-    return size.toString().toLowerCase().split('.').last;
+  static String _stringFromOfficeType(OfficeType type) {
+    return type.toString().toLowerCase().split('.').last;
   }
 }

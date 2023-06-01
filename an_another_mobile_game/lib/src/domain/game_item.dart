@@ -22,6 +22,7 @@ class GameItem {
       'size': _stringFromGameSize(size),
       'cost': cost,
       'income': income,
+      'title': title,
     };
   }
 

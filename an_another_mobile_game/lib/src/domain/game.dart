@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'company.dart';
 import 'developer.dart';
 import 'enhancement.dart';
@@ -34,6 +36,18 @@ class GameRecord {
               .map((enhancement) => Enhancement.fromJson(enhancement))),
         );
 
+  GameRecord.fromGame(Game game)
+      : this(
+          money: game.money,
+          lines: game.lines,
+          incomingPerSecond: game.incomingPerSecond,
+          linesPerSecond: game.linesPerSecond,
+          games: game.games,
+          offices: game.offices,
+          developers: game.developers,
+          enhancements: game.enhancements,
+        );
+
   final int money;
   final int lines;
   final int incomingPerSecond;
@@ -50,6 +64,9 @@ class GameRecord {
       'incomingPerSecond': incomingPerSecond,
       'linesPerSecond': linesPerSecond,
       'games': games.map((game) => game.toJson()).toList(),
+      'offices': offices.map((office) => office.toJson()).toList(),
+      'developers': developers.map((developer) => developer.toJson()).toList(),
+      'enhancements': enhancements.map((enhancement) => enhancement.toJson()).toList(),
     };
   }
 }
@@ -66,7 +83,7 @@ class Game {
     enhancements = record.enhancements;
 
     games.sort((a, b) => a.cost.compareTo(b.cost));
-    enhancements.sort((a,b)=> a.cost.compareTo(b.cost));
+    enhancements.sort((a, b) => a.cost.compareTo(b.cost));
     improveOffice(OfficeType.home);
   }
 
@@ -89,6 +106,9 @@ class Game {
 
   void timer() =>
       Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
+
+  void saveData() =>
+      Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame());
 
   void writeLine() {
     lines += playerProductivity.round();
@@ -116,7 +136,8 @@ class Game {
   }
 
   void toolBought(Enhancement enhancement) {
-    if (money < enhancement.cost || acquiredEnhancements.contains(enhancement)) {
+    if (money < enhancement.cost ||
+        acquiredEnhancements.contains(enhancement)) {
       return;
     }
 
@@ -127,7 +148,7 @@ class Game {
           enhancement.developerType!, enhancement.multiplier);
     }
 
-    if(enhancement.type == EnhancementType.player){
+    if (enhancement.type == EnhancementType.player) {
       playerProductivity *= enhancement.multiplier;
       return;
     }
@@ -204,5 +225,16 @@ class Game {
     }
 
     return multiplier;
+  }
+
+  Future<void> _saveGame() async {
+    final gameRef = FirebaseFirestore.instance
+        .collection('users')
+        .withConverter<GameRecord>(
+            fromFirestore: (snapshot, _) =>
+                GameRecord.fromJson(snapshot.data()!),
+            toFirestore: (game, _) => game.toJson());
+
+    await gameRef.doc('test').set(GameRecord.fromGame(this));
   }
 }

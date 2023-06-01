@@ -13,6 +13,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       : super(GameState(0, 0, 0, 0, 'assets/images/Programmer_idle.jpg')) {
     on<GameStarted>((event, emit) async {
       game.timer();
+      game.saveData();
       await emit.onEach<Game>(game.tick(), onData: (game) => add(GameTicked()));
     });
 

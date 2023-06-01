@@ -9,6 +9,13 @@ class DepartmentSize {
           size: json['size']! as int,
         );
 
+  Map<String, Object?> toJson (){
+    return {
+      'developerType': _stringFromDeveloperType(developerType),
+      'size': size,
+    };
+  }
+
   final DeveloperType developerType;
   final int size;
 
@@ -17,7 +24,7 @@ class DepartmentSize {
         e.toString().toLowerCase().split('.').last == size.toLowerCase());
   }
 
-  static String _stringFromDeveloperType(DeveloperType size) {
-    return size.toString().toLowerCase().split('.').last;
+  static String _stringFromDeveloperType(DeveloperType developerType) {
+    return developerType.toString().toLowerCase().split('.').last;
   }
 }
