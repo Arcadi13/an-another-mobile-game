@@ -15,7 +15,7 @@ class SettingsController {
   /// and sound.
   ValueNotifier<bool> muted = ValueNotifier(false);
 
-  ValueNotifier<String> playerName = ValueNotifier('Player');
+  ValueNotifier<String> playerName = ValueNotifier('none');
 
   ValueNotifier<bool> soundsOn = ValueNotifier(false);
 

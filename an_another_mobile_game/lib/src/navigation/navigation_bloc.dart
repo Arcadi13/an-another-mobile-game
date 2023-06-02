@@ -13,6 +13,8 @@ class NavigationBloc extends Bloc<NavigationEvent, NavigationState> {
 
     on<OpenCompanyEvent>((event, emit) => emit(OpenCompanyState()));
 
+    on<OpenSettingsEvent>((event, emit) => emit(OpenSettingsState()));
+
     on<CloseDialogEvent>((event, emit) => emit(ClosedDialogsState()));
 
     add(CloseDialogEvent());

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:an_another_mobile_game/src/settings/settings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'company.dart';
@@ -107,8 +108,8 @@ class Game {
   void timer() =>
       Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
 
-  void saveData() =>
-      Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame());
+  void saveData(SettingsController settings) =>
+      Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame(settings));
 
   void writeLine() {
     lines += playerProductivity.round();
@@ -227,7 +228,7 @@ class Game {
     return multiplier;
   }
 
-  Future<void> _saveGame() async {
+  Future<void> _saveGame(SettingsController settings) async {
     final gameRef = FirebaseFirestore.instance
         .collection('users')
         .withConverter<GameRecord>(
@@ -235,6 +236,7 @@ class Game {
                 GameRecord.fromJson(snapshot.data()!),
             toFirestore: (game, _) => game.toJson());
 
-    await gameRef.doc('test').set(GameRecord.fromGame(this));
+    var key = settings.playerName.value;
+    await gameRef.doc(key).set(GameRecord.fromGame(this));
   }
 }

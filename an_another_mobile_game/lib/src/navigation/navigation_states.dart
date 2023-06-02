@@ -11,4 +11,6 @@ class OpenGamesState extends NavigationState {}
 
 class OpenCompanyState extends NavigationState {}
 
+class OpenSettingsState extends NavigationState {}
+
 class ClosedDialogsState extends NavigationState {}

@@ -1,3 +1,4 @@
+import 'package:an_another_mobile_game/src/settings/settings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/game.dart';
@@ -9,11 +10,11 @@ class GameObserver extends BlocObserver {
 }
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  GameBloc(Game game)
+  GameBloc(Game game, SettingsController settings)
       : super(GameState(0, 0, 0, 0, 'assets/images/Programmer_idle.jpg')) {
     on<GameStarted>((event, emit) async {
       game.timer();
-      game.saveData();
+      game.saveData(settings);
       await emit.onEach<Game>(game.tick(), onData: (game) => add(GameTicked()));
     });
 

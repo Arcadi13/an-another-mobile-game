@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../domain/game.dart';
 import '../domain/game_item.dart';
-import '../game/game_bloc.dart';
-import '../game/game_events.dart';
 import '../navigation/navigation_bloc.dart';
 import '../navigation/navigation_events.dart';
 import '../navigation/navigation_states.dart';
