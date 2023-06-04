@@ -108,8 +108,14 @@ class Game {
   void timer() =>
       Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
 
-  void saveData(SettingsController settings) =>
-      Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame(settings));
+  void saveData(SettingsController settings) {
+
+    int seconds =  DateTime.now().difference(settings.lastSaveDate.value).inSeconds;
+    money += incomingPerSecond * seconds;
+    lines += linesPerSecond * seconds;
+
+    Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame(settings));
+  }
 
   void writeLine() {
     lines += playerProductivity.round();
@@ -236,6 +242,7 @@ class Game {
                 GameRecord.fromJson(snapshot.data()!),
             toFirestore: (game, _) => game.toJson());
 
+    settings.saveLastDate();
     var key = settings.playerName.value;
     await gameRef.doc(key).set(GameRecord.fromGame(this));
   }

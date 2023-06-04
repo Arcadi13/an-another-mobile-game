@@ -15,6 +15,8 @@ abstract class SettingsPersistence {
 
   Future<bool> getSoundsOn();
 
+  Future<DateTime> getLastSaveDate();
+
   Future<void> saveMusicOn(bool value);
 
   Future<void> saveMuted(bool value);
@@ -22,4 +24,6 @@ abstract class SettingsPersistence {
   Future<void> savePlayerName(String value);
 
   Future<void> saveSoundsOn(bool value);
+
+  Future<void> saveDateTime(DateTime value);
 }
