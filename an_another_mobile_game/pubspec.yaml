@@ -37,12 +37,14 @@ dependencies:
   intl: any
   audioplayers: ^3.0.0
   shared_preferences: ^2.0.13
+  uuid: ^3.0.6
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
 
@@ -55,7 +57,10 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/an_another_mobile_game_icon.png"
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -69,6 +74,7 @@ flutter:
     - assets/images/
     - assets/sfx/
     - assets/music/
+    - assets/icon/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

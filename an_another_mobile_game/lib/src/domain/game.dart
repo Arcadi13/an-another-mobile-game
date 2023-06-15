@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:an_another_mobile_game/src/settings/settings.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'company.dart';
 import 'developer.dart';
 import 'enhancement.dart';
@@ -13,9 +16,12 @@ class GameRecord {
     required this.incomingPerSecond,
     required this.linesPerSecond,
     required this.games,
+    required this.company,
     required this.offices,
+    required this.boughtOffices,
     required this.developers,
     required this.enhancements,
+    required this.acquiredEnhancements,
   });
 
   GameRecord.fromJson(Map<String, dynamic> json)
@@ -24,24 +30,47 @@ class GameRecord {
           lines: json['lines']! as int,
           incomingPerSecond: json['incomingPerSecond']! as int,
           linesPerSecond: json['linesPerSecond']! as int,
+          company: Company.fromRecord(CompanyRecord.fromJson(json['company']!)),
           games: List<GameItem>.from(
               json['games']!.map((game) => GameItem.fromJson(game))),
           offices: List<Office>.from(
               json['offices']!.map((office) => Office.fromJson(office))),
+          boughtOffices: List<OfficeType>.from(
+              json['boughtOffices']!.map((office) => _officeTypeFromString(office))),
           developers: List<Developer>.from(json['developers']!
               .map((developer) => Developer.fromJson(developer))),
           enhancements: List<Enhancement>.from(json['enhancements']!
               .map((enhancement) => Enhancement.fromJson(enhancement))),
+          acquiredEnhancements: List<Enhancement>.from(json['enhancements']!
+              .map((enhancement) => Enhancement.fromJson(enhancement))),
+        );
+
+  GameRecord.fromGame(Game game)
+      : this(
+          money: game.money,
+          lines: game.lines,
+          incomingPerSecond: game.incomingPerSecond,
+          linesPerSecond: game.linesPerSecond,
+          company: game.company,
+          games: game.games,
+          offices: game.offices,
+          boughtOffices: game.boughtOffices,
+          developers: game.developers,
+          enhancements: game.enhancements,
+          acquiredEnhancements: game.acquiredEnhancements,
         );
 
   final int money;
   final int lines;
   final int incomingPerSecond;
   final int linesPerSecond;
+  final Company company;
   final List<GameItem> games;
   final List<Office> offices;
+  final List<OfficeType> boughtOffices;
   final List<Developer> developers;
   final List<Enhancement> enhancements;
+  final List<Enhancement> acquiredEnhancements;
 
   Map<String, Object?> toJson() {
     return {
@@ -49,8 +78,26 @@ class GameRecord {
       'lines': lines,
       'incomingPerSecond': incomingPerSecond,
       'linesPerSecond': linesPerSecond,
+      'company': CompanyRecord.fromCompany(company).toJson(),
       'games': games.map((game) => game.toJson()).toList(),
+      'offices': offices.map((office) => office.toJson()).toList(),
+      'boughtOffices': boughtOffices.map((office) => _stringFromOfficeType(office)).toList(),
+      'developers': developers.map((developer) => developer.toJson()).toList(),
+      'enhancements':
+          enhancements.map((enhancement) => enhancement.toJson()).toList(),
+      'acquiredEnhancements': acquiredEnhancements
+          .map((enhancement) => enhancement.toJson())
+          .toList(),
     };
+  }
+
+  static OfficeType _officeTypeFromString(String type) {
+    return OfficeType.values.firstWhere((e) =>
+    e.toString().toLowerCase().split('.').last == type.toLowerCase());
+  }
+
+  static String _stringFromOfficeType(OfficeType officeType) {
+    return officeType.toString().toLowerCase().split('.').last;
   }
 }
 
@@ -60,14 +107,16 @@ class Game {
     lines = record.lines;
     incomingPerSecond = record.incomingPerSecond;
     linesPerSecond = record.linesPerSecond;
+    company = record.company;
     games = record.games;
     offices = record.offices;
+    boughtOffices = record.boughtOffices;
     developers = record.developers;
     enhancements = record.enhancements;
+    acquiredEnhancements = record.acquiredEnhancements;
 
     games.sort((a, b) => a.cost.compareTo(b.cost));
-    enhancements.sort((a,b)=> a.cost.compareTo(b.cost));
-    improveOffice(OfficeType.home);
+    enhancements.sort((a, b) => a.cost.compareTo(b.cost));
   }
 
   int money = 0;
@@ -81,7 +130,7 @@ class Game {
   List<Developer> developers = [];
   List<Enhancement> enhancements = [];
   List<Enhancement> acquiredEnhancements = [];
-  Company company = Company();
+  late Company company;
 
   Stream<Game> tick() {
     return Stream.periodic(const Duration(milliseconds: 100), (tick) => this);
@@ -89,6 +138,15 @@ class Game {
 
   void timer() =>
       Timer.periodic(const Duration(seconds: 1), (timer) => _incomePerSecond());
+
+  void saveData(SettingsController settings) {
+    int seconds =
+        DateTime.now().difference(settings.lastSaveDate.value).inSeconds;
+    money += incomingPerSecond * seconds;
+    lines += linesPerSecond * seconds;
+
+    Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame(settings));
+  }
 
   void writeLine() {
     lines += playerProductivity.round();
@@ -116,7 +174,8 @@ class Game {
   }
 
   void toolBought(Enhancement enhancement) {
-    if (money < enhancement.cost || acquiredEnhancements.contains(enhancement)) {
+    if (money < enhancement.cost ||
+        acquiredEnhancements.contains(enhancement)) {
       return;
     }
 
@@ -127,7 +186,7 @@ class Game {
           enhancement.developerType!, enhancement.multiplier);
     }
 
-    if(enhancement.type == EnhancementType.player){
+    if (enhancement.type == EnhancementType.player) {
       playerProductivity *= enhancement.multiplier;
       return;
     }
@@ -152,6 +211,7 @@ class Game {
     lines = 0;
     incomingPerSecond = 0;
     linesPerSecond = 0;
+    playerProductivity = 1;
 
     boughtOffices.removeRange(0, boughtOffices.length);
     acquiredEnhancements.removeRange(0, acquiredEnhancements.length);
@@ -204,5 +264,18 @@ class Game {
     }
 
     return multiplier;
+  }
+
+  Future<void> _saveGame(SettingsController settings) async {
+    final gameRef = FirebaseFirestore.instance
+        .collection('users')
+        .withConverter<GameRecord>(
+            fromFirestore: (snapshot, _) =>
+                GameRecord.fromJson(snapshot.data()!),
+            toFirestore: (game, _) => game.toJson());
+
+    settings.saveLastDate();
+    var key = settings.playerName.value;
+    await gameRef.doc(key).set(GameRecord.fromGame(this));
   }
 }

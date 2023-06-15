@@ -4,24 +4,52 @@ import 'developer.dart';
 import 'game_item.dart';
 import 'office.dart';
 
+class CompanyRecord {
+  CompanyRecord({
+    required this.office,
+    required this.departments,
+    required this.games,
+  });
+
+  CompanyRecord.fromJson(Map<String, dynamic> json)
+      : this(
+          games: List<GameItem>.from(
+              json['games']!.map((game) => GameItem.fromJson(game))),
+          office: Office.fromJson(json['office']!),
+          departments: List<Department>.from(json['departments']!.map(
+              (department) => Department.fromRecord(
+                  DepartmentRecord.fromJson(department)))),
+        );
+
+  CompanyRecord.fromCompany(Company company)
+      : this(
+            office: company.office,
+            departments: company.departments,
+            games: company.publishedGames);
+
+  final Office office;
+  final List<Department> departments;
+  final List<GameItem> games;
+
+  Map<String, Object?> toJson() {
+    return {
+      'office': office.toJson(),
+      'departments': departments
+          .map((department) =>
+              DepartmentRecord.fromDepartment(department).toJson())
+          .toList(),
+      'games': games.map((game) => game.toJson()).toList(),
+    };
+  }
+}
+
 class Company {
-  Company() {
-    departments = [
-      Department(DeveloperType.fullstack),
-      Department(DeveloperType.artist),
-      Department(DeveloperType.uiDesigner),
-      Department(DeveloperType.gameArtist),
-      Department(DeveloperType.animator),
-      Department(DeveloperType.programmer),
-      Department(DeveloperType.gameDesigner),
-      Department(DeveloperType.soundEngineer),
-      Department(DeveloperType.creativeDirector),
-      Department(DeveloperType.marketing),
-      Department(DeveloperType.systemDesigner),
-      Department(DeveloperType.toolDesigner),
-      Department(DeveloperType.vfxArtist),
-      Department(DeveloperType.levelDesigner),
-    ];
+  Company();
+
+  Company.fromRecord(CompanyRecord record) {
+    office = record.office;
+    departments = record.departments;
+    publishedGames = record.games;
   }
 
   late Office office;
@@ -73,6 +101,12 @@ class Company {
 
   void _updateDepartmentSize(DepartmentSize departmentSize) {
     var department = _getDepartment(departmentSize.developerType);
+
+    if(department == null){
+      departments.add(Department(departmentSize.developerType, departmentSize.size));
+      return;
+    }
+
     department?.expandSize(departmentSize.size);
   }
 }

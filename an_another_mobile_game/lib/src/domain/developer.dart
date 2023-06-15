@@ -33,6 +33,16 @@ class Developer {
     description: json['description']! as String,
   );
 
+  Map<String, Object?> toJson (){
+    return {
+      'type': _stringFromDeveloperType(type),
+      'productivity': productivity,
+      'cost': cost,
+      'title': title,
+      'description': description,
+    };
+  }
+
   final DeveloperType type;
   final int productivity;
   final int cost;
@@ -44,7 +54,7 @@ class Developer {
     e.toString().toLowerCase().split('.').last == size.toLowerCase());
   }
 
-  static String _stringFromDeveloperType(DeveloperType size) {
-    return size.toString().toLowerCase().split('.').last;
+  static String _stringFromDeveloperType(DeveloperType type) {
+    return type.toString().toLowerCase().split('.').last;
   }
 }

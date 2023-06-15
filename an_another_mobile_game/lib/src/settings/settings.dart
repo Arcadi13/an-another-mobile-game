@@ -15,11 +15,13 @@ class SettingsController {
   /// and sound.
   ValueNotifier<bool> muted = ValueNotifier(false);
 
-  ValueNotifier<String> playerName = ValueNotifier('Player');
+  ValueNotifier<String> playerName = ValueNotifier('none');
 
   ValueNotifier<bool> soundsOn = ValueNotifier(false);
 
   ValueNotifier<bool> musicOn = ValueNotifier(false);
+
+  ValueNotifier<DateTime> lastSaveDate = ValueNotifier(DateTime.now());
 
   /// Creates a new instance of [SettingsController] backed by [persistence].
   SettingsController({required SettingsPersistence persistence})
@@ -37,6 +39,7 @@ class SettingsController {
       _persistence.getSoundsOn().then((value) => soundsOn.value = value),
       _persistence.getMusicOn().then((value) => musicOn.value = value),
       _persistence.getPlayerName().then((value) => playerName.value = value),
+      _persistence.getLastSaveDate().then((value) => lastSaveDate.value = value),
     ]);
   }
 
@@ -58,5 +61,10 @@ class SettingsController {
   void toggleSoundsOn() {
     soundsOn.value = !soundsOn.value;
     _persistence.saveSoundsOn(soundsOn.value);
+  }
+
+  void saveLastDate(){
+    lastSaveDate.value = DateTime.now();
+    _persistence.saveDateTime(lastSaveDate.value);
   }
 }

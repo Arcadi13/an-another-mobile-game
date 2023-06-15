@@ -22,6 +22,17 @@ class Enhancement {
           description: json['description']! as String,
         );
 
+  Map<String, Object?> toJson (){
+    return {
+      'developerType': developerType == null ? "none" : _stringFromDeveloperType(developerType!),
+      'type': _stringFromEnhancementType(type),
+      'cost': cost,
+      'multiplier': multiplier,
+      'name': name,
+      'description': description,
+    };
+  }
+
   final DeveloperType? developerType;
   final EnhancementType type;
   final double multiplier;
@@ -41,7 +52,11 @@ class Enhancement {
         e.toString().toLowerCase().split('.').last == type.toLowerCase());
   }
 
-  static String _stringFromDeveloperType(DeveloperType size) {
-    return size.toString().toLowerCase().split('.').last;
+  static String _stringFromDeveloperType(DeveloperType developerType) {
+    return developerType.toString().toLowerCase().split('.').last;
+  }
+
+  static String _stringFromEnhancementType(EnhancementType enhancementType) {
+    return enhancementType.toString().toLowerCase().split('.').last;
   }
 }

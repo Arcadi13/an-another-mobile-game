@@ -122,14 +122,14 @@ class AudioController {
   /// [SettingsController.muted] is `true` or if its
   /// [SettingsController.soundsOn] is `false`.
   void playSfx(SfxType type) {
-    // final muted = _settings?.muted.value ?? true;
-    // if (muted) {
-    //   return;
-    // }
-    // final soundsOn = _settings?.soundsOn.value ?? false;
-    // if (!soundsOn) {
-    //   return;
-    // }
+    final muted = _settings?.muted.value ?? true;
+    if (muted) {
+      return;
+    }
+    final soundsOn = _settings?.soundsOn.value ?? false;
+    if (!soundsOn) {
+      return;
+    }
 
     final options = soundTypeToFilename(type);
     final filename = options[_random.nextInt(options.length)];
