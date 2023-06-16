@@ -28,4 +28,5 @@ jobs:
 
     - name: Build Flutter iOS app
       run: |
+        cd an_another_mobile_game
         flutter build ios --release --no-codesign
