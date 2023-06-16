@@ -33,13 +33,13 @@ class DepartmentRecord {
   final int hired;
   final double productivityMultiplier;
 
-  static DeveloperType _developerTypeFromString(String size) {
+  static DeveloperType _developerTypeFromString(String developerType) {
     return DeveloperType.values.firstWhere((e) =>
     e
         .toString()
         .toLowerCase()
         .split('.')
-        .last == size.toLowerCase());
+        .last == developerType.toLowerCase());
   }
 
   static String _stringFromDeveloperType(DeveloperType developerType) {

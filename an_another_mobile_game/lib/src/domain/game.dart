@@ -41,7 +41,7 @@ class GameRecord {
               .map((developer) => Developer.fromJson(developer))),
           enhancements: List<Enhancement>.from(json['enhancements']!
               .map((enhancement) => Enhancement.fromJson(enhancement))),
-          acquiredEnhancements: List<Enhancement>.from(json['enhancements']!
+          acquiredEnhancements: List<Enhancement>.from(json['acquiredEnhancements']!
               .map((enhancement) => Enhancement.fromJson(enhancement))),
         );
 
