@@ -21,6 +21,10 @@ jobs:
       with:
         flutter-version: '3.x'
 
+    - name: Create file from secret
+      run: |
+        echo ${{ secrets.MY_SECRET_FILE }} | base64 --decode > an_another_mobile_game/firebase_config.dart
+
     - name: Install Flutter dependencies
       run: | 
         cd an_another_mobile_game
