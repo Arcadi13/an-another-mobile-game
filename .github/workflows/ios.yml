@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '12.x'
+
+    - uses: subosito/flutter-action@v1
+      with:
+        flutter-version: '3.x'
+
+    - name: Create file from secret
+      run: |
+        echo ${{ secrets.MY_SECRET_FILE }} | base64 --decode > an_another_mobile_game/firebase_config.dart
+
+    - name: Install Flutter dependencies
+      run: | 
+        cd an_another_mobile_game
+        flutter pub get
+
+    - name: Build Flutter iOS app
+      run: |
+        cd an_another_mobile_game
+        flutter build ios --release --no-codesign
