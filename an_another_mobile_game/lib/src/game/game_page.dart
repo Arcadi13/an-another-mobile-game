@@ -7,6 +7,7 @@ import 'package:an_another_mobile_game/src/navigation/navigation_bloc.dart';
 import 'package:an_another_mobile_game/src/navigation/navigation_events.dart';
 import 'package:an_another_mobile_game/src/upgrades_enhancements/upgrades_enhancements_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../company/game_career.dart';
@@ -99,6 +100,7 @@ class _GameWidgetState extends State<GameWidget>
 
   @override
   void initState() {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
