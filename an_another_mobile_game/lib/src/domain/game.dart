@@ -145,6 +145,7 @@ class Game {
     money += incomingPerSecond * seconds;
     lines += linesPerSecond * seconds;
 
+    _saveGame(settings);
     Timer.periodic(const Duration(minutes: 1), (timer) => _saveGame(settings));
   }
 
